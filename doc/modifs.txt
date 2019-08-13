@@ -1,0 +1,60 @@
+21/nov/2002
+Se modifico para que la asignacion de colores sea:
+  tacicomb,colf,colb; * tac - colores, i = inicializa, comb = combinacion,
+			colf = color forground, colb = color background *
+
+tacscomb; * tac - colores, s=set o aplicar, comb=combinacion *
+
+ttcmaxcol; * Asgina a maxcol el numero de columnas de la ventana activa *
+ttrmaxrow; * Asigna a maxrow el numero de renglones de la ventana activa *
+ttuname;   * Asigna a name el nombre del usuario (login) *
+ttl;       * Crea una ventana con una calculadora interna *
+
+qu,svar,;  * Convierte a mayusculas la variable svar *
+qr,svar1,svar2,svar3,; * reemplaza cada svar2 en svar1 por svar3, por ejemplo:
+(svar1)=($/midir/miarch,13);
+qr,svar1,"/","_",;    y quedaria svar2 = "_midir_miarch_";
+
+Ahora se puede crear una ventana con una variable en lugar de que tenga
+que ser una constante
+
+tSiventana_z,iren_z,icol_z,inlineas_z,incols_z;
+* Genera una ventana con el numero de iventana_z en la posicion
+iren_z,icol_z con inlineas_z renglones e incols_z columnas. *
+
+Se puede tomar el numero de la Ventana Activa con:
+
+tSWinventana_z;
+
+inventana_z contendra el numero de la ventana activa
+
+-- 17-Mayo-2003 -- DRBR
+Modifcado el parcar y el parcar1 para agregar un tipo de campo llamado
+F que debe contener una fecha como cadena AAAAMMDD, hace la separacion
+de cada campo y lo imprime en AAAA-MM-DD para que al tomarlo se pueda
+considerar ya como una fecha, valida la fecha y si es invalida devuelve
+2003-01-01 una fecha valida pero habitualmente nadie la usa (el primero
+de enero no se trabaja) y por lo tanto es muy facil detectar las fechas
+que han sido corregidas.
+
+-- 18-Julio-2003 --- DRBR
+Modificado el tida.c y misce.c para que acepten una nueva instrucción
+&sDfecha,"t",ivar;
+
+Incrementa la fecha en "t" ivar incrementos, donde t:
+s - Segundos
+m - Minutos
+h - horas
+d - dias
+W - Semanas
+M - Meses
+Y - Años
+
+al agregar meses y años toma en cuenta si el dia del fecha del
+resultado es valido y si es mayor a 31,30,28,29 las regresa al ultimo
+dia del mes dependiendo del mes y si es año bisiesto, esto facilita
+enormenmente las operaciones en las que hay que sumar meses
+
+En estas funciones aún tengo errores de ejecucion y me bota del
+programa despues de hacerlas repetidas veces, estoy tratando de buscar
+el problema para solucionarlo

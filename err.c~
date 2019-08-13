@@ -1,0 +1,30 @@
+/* rutina de error */
+#include <stdio.h>
+#include <stdarg.h>
+#include <curses.h>
+
+extern int vido;
+
+#ifdef SQLGEN
+void vendsql();
+#endif
+
+void err(char *format, ... )
+{
+	va_list arglist;
+
+    if(vido) endwin();
+
+    fprintf(stderr,"Problem:\n");
+
+	va_start(arglist,format);
+
+	vfprintf(stderr,format,arglist);
+
+	va_end(arglist);
+
+#ifdef SQLGEN
+vendsql();
+#endif
+	exit(0);
+}

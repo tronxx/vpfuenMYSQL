@@ -1,0 +1,291 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>X-Window y el VPG</TITLE>
+<META NAME="Fecha" CONTENT="29 de junio de 1999">
+<META NAME="Template" CONTENT="C:\Program Files\Microsoft Office\Office\html.dot">
+</HEAD>
+<BODY TEXT="#000000" LINK="#0000ff" VLINK="#800080" BGCOLOR="#ffffff" leftmargin="10">
+
+<FONT FACE="Arial"><H1>El VPG y X-Window</H1>
+</FONT><FONT FACE="Arial" SIZE=2><P>El cuarto ambiente de utilidad pr&aacute;ctica para los programadores de VPG es el de aplicaciones GUI bajo X-Window. Si bien el tipo de aplicaciones GUI posible bajo X-Window con el VPG se concentra en formas para programas interactivos que se conectan a bases de datos SQL, o bien, que usan bases de datos planas (locales, multiusuario), el horizonte se presenta amplio y las posibilidades son m&uacute;ltiples.</P>
+<P>Aqu&iacute; se presenta lo vigente hasta el d&iacute;a <B><I>25 de Junio de 1999.</P>
+</B></I></FONT><FONT FACE="Arial"><H2>Antes del principio</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>Para comenzar, el programador debe de disponer de por lo menos 3 elementos:</P>
+<OL>
+
+<LI>Un buen editor de textos para programaci&oacute;n.</LI>
+<LI>Opcionalmente, un dise&ntilde;ador de formas (fdesign es una alternativa accesible) disponible en la computadora con Linux, adem&aacute;s de todos los programas del paquete VPG para Linux.</LI>
+<LI>Un servidor X-Window funcional, ya sea en una computadora con Linux para uso personal del programador, o bien, un servidor X-Window para Windows NT, 98 o 95.</LI></OL>
+
+<P>Este ambiente le debe permitir al programador agilidad en editar, guardar, compilar, correr y probar en forma c&iacute;clica &aacute;gil.</P>
+</FONT><FONT FACE="Arial"><H2>Principio de Funcionamiento</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>Las aplicaciones para X-Window de VPG podr&iacute;an tener este formato:</P>
+<OL>
+
+<LI>Secci&oacute;n de preparativos propios de cualquier programa VPG, que incluye definiciones de &aacute;reas de memoria, sentencias SQL o apertura de archivos, conexiones a servidores SQL, etc. En la primera parte de esta secci&oacute;n, el programador puede incluir todos los archivos de definiciones necesarios para sus aplicaciones.</LI>
+<LI>Secci&oacute;n de inicializaci&oacute;n y creaci&oacute;n de formas y objetos fijos de la aplicaci&oacute;n. Esta secci&oacute;n normalmente se ejecuta una sola vez, cuando la aplicaci&oacute;n comienza a correr. En esta secci&oacute;n se definen las N formas que el programa usar&aacute; y se establece la relaci&oacute;n entre <I>algunas de esas formas</I> y los objetos que las contendr&aacute;n. La &uacute;ltima parte de esta secci&oacute;n es mostrar la forma principal.</LI>
+<LI>La tercera secci&oacute;n puede consistir en un rizo con la instrucci&oacute;n de espera de eventos al comienzo, seguida de los grupos de instrucciones que deber&aacute;n de ejecutarse cuando se produzcan los eventos definidos. Cada uno de estos grupos, desde luego, deber&aacute; de concluir con una instrucci&oacute;n que en forma autom&aacute;tica comience nuevamente el rizo.</LI>
+<LI>La cuarta secci&oacute;n podr&iacute;a contener todas las subrutinas que deber&aacute;n de ejecutarse seg&uacute;n lo requieran las secciones 1, 2 y 3.</LI></OL>
+
+<P>Para efectos de las secciones 1 y 4, todo lo conocido del VPG contin&uacute;a siendo aplicable y vigente. Nos concentraremos, pues en las secciones 2 y 3, que son las que est&aacute;n directamente relacionadas con las instrucciones para X-Window del VPG.</P>
+</FONT><FONT FACE="Arial"><H2>Secci&oacute;n de inicializaci&oacute;n</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>Son 3 sencillas instrucciones las disponibles para iniciar el programa X VPG:</P>
+<P>XI,"Instancia",;</P>
+<P>Con esta instrucci&oacute;n se prepara un ambiente para comenzar a trabajar. El <I>inicializador est&aacute;ndar</I> de cualquier programa que har&aacute; uso de un servidor X. En realidad, el contenido de la serie entre las comillas no es muy relevante. &Eacute;ste <B>no es</B> el nombre de la ventana. M&aacute;s adelante se examinar&aacute; la instrucci&oacute;n que genera el nombre de la ventana.</P>
+<P>XF,4,;</P>
+<B><P>F=Forma. </B>Se solicitan recursos para 4 formas. Conforme el programa se va desarrollando, se puede modificar esta instrucci&oacute;n para que solicite siempre el n&uacute;mero exacto de formas que se crear&aacute;n. Si este n&uacute;mero es <I>menor</I>, desde luego, el programa abortar&aacute;.</P>
+<P>XO,50,;</P>
+<B><P>O=Objetos. </B>Se est&aacute;n solicitando recursos para <I>50 objetos</I>. Es una equis y una letra "O" may&uacute;scula, no un cero. Esta parte es un tanto tediosa. Mientras contamos con un <I>constructor</I>, ser&aacute; necesario tener cuidado en no dilapidar recursos. Se trata de solicitar exactamente los recursos que se requieren, ni m&aacute;s ni menos.</P>
+</FONT><FONT FACE="Arial"><H2>Secci&oacute;n de creaci&oacute;n de formas</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>En esta secci&oacute;n se definen las formas y los objetos que las mismas contendr&aacute;n.</P>
+<P>Xb,2,1,500,410,"XFORM1",;</P>
+<B><P>b=begin</B>, comenzar la forma. Esta <B>tiene que ser</B> la primera instrucci&oacute;n que aparecer&aacute; en la definici&oacute;n de <I>una forma</I>. El <B>2</B> se refiere al <I>recurso 2</I>, o sea, de los 4 que se pidieron (0, 1, 2 y 3), se trata del <I>tercero</I>. El <B>1</B> es el <I>tipo</I> de forma. Hay una secci&oacute;n para ver los diferentes tipos de formas. <B>500 y 410</B> se refieren a las <I>dimensiones</I> (en pixeles), de la forma en creaci&oacute;n. <B>500</B> es el ancho y <B>410</B> la altura. <B>"XFORM1" </B>es un nombre que en VPG no se usa pero que tiene que existir y cada forma deber&aacute; tener uno diferente.</P>
+<P>Xe,;</P>
+<B><P>e=end, terminar.</B> Con esta instrucci&oacute;n se <I>termina</I> el proceso de llenar una forma con objetos. Esto significa, en efecto, que <I>todas las formas se crear&aacute;n encerrando las instrucciones que les a&ntilde;aden objetos entre una </I><B>Xb,...; </B>y una <B>Xe,;</B>.</P>
+<P>Obs&eacute;rvese el siguiente segmento que crea una forma:</P>
+<P>Xb,1,1,500,305,"XFORM2",;<BR>
+Xai,20,2,65,30,90,20,"Identa",;<BR>
+Xai,21,0,65,55,80,20,"Estirna",;<BR>
+Xai,22,0,65,80,80,20,"Le gar&ccedil;on",;<BR>
+Xai,23,0,65,105,100,20,"Les noms",;<BR>
+Xe,;</P>
+<P>Todas las instrucciones comprendidas entre un par Xb-Xe se refieren a <I>objetos que se a&ntilde;aden</I> a la forma en creaci&oacute;n.</P>
+</FONT><FONT FACE="Arial"><H2>A&ntilde;adiendo objetos a la forma<BR>
+y d&aacute;ndoles caracter&iacute;sticas</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>Las instrucciones para <I>a&ntilde;adir</I> objetos tienen las letras <B>Xa?</B>. (<B>a=a&ntilde;adir</B>). La tercera letra var&iacute;a seg&uacute;n el tipo de objeto que se habr&aacute; de a&ntilde;adir:</P>
+<P>Xai,...,; Objeto de <I>ingreso</I> de datos.<BR>
+Xab,...,; Objeto <I>bot&oacute;n</I>.<BR>
+XaB,...,; Objeto <I>browser</I> o contenedor/mostrador.<BR>
+XaT,...,; Objeto <I>tabfolder</I>=contenedor de formas internas.<BR>
+Xat,...,; Objeto <I>texto pasivo o letrero solo</I>.</P>
+<P>Todas las instrucciones de <I>a&ntilde;adir objetos</I> tienen los mismos argumentos:</P>
+<P>Xai,3,0,65,85,100,20,"Nombre(s)",;</P>
+<B><P>ai=</B><I>a&ntilde;ade ingreso... en</I> recurso # 3, estilo CERO, posici&oacute;n x=65 y posici&oacute;n y=85, tama&ntilde;o ancho/alto = 100/20, letrero "Nombre(s)".</P>
+<P>Para aquellos que se pierden en estas explicaciones, aqu&iacute; damos el detalle de los argumentos:</P></FONT>
+<P ALIGN="CENTER"><CENTER><TABLE CELLSPACING=0 BORDER=0 CELLPADDING=4 WIDTH=450>
+<TR><TD WIDTH="28%" VALIGN="TOP">
+<P><FONT FACE="Courier New" SIZE=2 COLOR="#0000ff">Xai</FONT></TD>
+<TD WIDTH="72%" VALIGN="TOP">
+<FONT FACE="Arial" SIZE=2><P>Se solicita a&ntilde;adir un objeto tipo <I>ingreso de datos</I>, (<B>input</B>).</FONT></TD>
+</TR>
+<TR><TD WIDTH="28%" VALIGN="TOP">
+<FONT FACE="Courier New" SIZE=2 COLOR="#0000ff"><P>3</FONT></TD>
+<TD WIDTH="72%" VALIGN="TOP">
+<FONT FACE="Arial" SIZE=2><P>Este objeto se ubicar&aacute; en el <I>recurso # 3</I>, u <I>objeto</I> # 3. (El n&uacute;mero total se solicita con la instrucci&oacute;n <B>XO,50,;</B>)</FONT></TD>
+</TR>
+<TR><TD WIDTH="28%" VALIGN="TOP">
+<FONT FACE="Courier New" SIZE=2 COLOR="#0000ff"><P>0</FONT></TD>
+<TD WIDTH="72%" VALIGN="TOP">
+<FONT FACE="Arial" SIZE=2><P>Se crear&aacute; con el estilo 0. (Ver los estilos para los objetos m&aacute;s adelante).</FONT></TD>
+</TR>
+<TR><TD WIDTH="28%" VALIGN="TOP">
+<FONT FACE="Courier New" SIZE=2 COLOR="#0000ff"><P>65</FONT></TD>
+<TD WIDTH="72%" VALIGN="TOP">
+<FONT FACE="Arial" SIZE=2><P>Distancia en pixeles desde el marco izquierdo. Esta distancia <I>debe de considerar</I> el letrero que acompa&ntilde;a a la caja de ingreso de datos.</FONT></TD>
+</TR>
+<TR><TD WIDTH="28%" VALIGN="TOP">
+<FONT FACE="Courier New" SIZE=2 COLOR="#0000ff"><P>80</FONT></TD>
+<TD WIDTH="72%" VALIGN="TOP">
+<FONT FACE="Arial" SIZE=2><P>Distancia desde el marco superior. En caso de que el letrero se pusiera arriba, esta distancia deber&aacute; considerar el espacio requerido para el letrero.</FONT></TD>
+</TR>
+<TR><TD WIDTH="28%" VALIGN="TOP">
+<FONT FACE="Courier New" SIZE=2 COLOR="#0000ff"><P>100</FONT></TD>
+<TD WIDTH="72%" VALIGN="TOP">
+<FONT FACE="Arial" SIZE=2><P>Ancho del objeto. (En el caso de cajas de ingreso de datos, el ancho <B><I>no incluye</B></I> el letrero. El letrero, por defecto se coloca a la <I>izquierda</I> del objeto).</FONT></TD>
+</TR>
+<TR><TD WIDTH="28%" VALIGN="TOP">
+<FONT FACE="Courier New" SIZE=2 COLOR="#0000ff"><P>20</FONT></TD>
+<TD WIDTH="72%" VALIGN="TOP">
+<FONT FACE="Arial" SIZE=2><P>Altura del objeto, en pixeles.</FONT></TD>
+</TR>
+<TR><TD WIDTH="28%" VALIGN="TOP">
+<FONT FACE="Courier New" SIZE=2 COLOR="#0000ff"><P>"Nombre(s)"</FONT></TD>
+<TD WIDTH="72%" VALIGN="TOP">
+<FONT FACE="Arial" SIZE=2><P>El contenido del letrero que acompa&ntilde;ar&aacute; a la caja de ingreso de datos. Desde luego, puede ser una variable o una constante. Cuando sea una variable, deber&aacute; de cuidarse que el contenido sea una serie alfa terminada en <I>nulo</I>.</FONT></TD>
+</TR>
+</TABLE>
+</CENTER></P>
+
+<FONT FACE="Arial" SIZE=2><P ALIGN="CENTER">&nbsp;Los dem&aacute;s objetos llevan la misma t&oacute;nica en sus instrucciones de creaci&oacute;n. Usan los mismos argumentos. Las diferencias radican en sus estilos y las posiciones de los letreros o en el uso del contenido del argumento del letrero.</P>
+<P>En el caso de los botones, por ejemplo, el letrero es el que aparecer&aacute; encima del bot&oacute;n en caso de que el estilo del bot&oacute;n sea del tipo normal. En el caso de los objetos B o <I>browsers (navegadores de datos)</I>, el letrero se ubica en alguna secci&oacute;n aleda&ntilde;a a la caja que lo forma.</P>
+<P>Los <I>tabfolders</I> toman el nombre de la <B>forma</B> que se le adjudica a cada p&aacute;gina. En tanto no se les ha adjudicado una forma, no tienen <I>orejas</I> con nombre.</P>
+<P>A continuaci&oacute;n damos la relaci&oacute;n de los estilos para los diferentes objetos:</P>
+</FONT><FONT FACE="Arial"><H3>Estilos de botones</H3>
+</FONT><PRE>0 = Normal
+1 = Empujado
+2 = Radio
+3 = Escondido
+4 = De Tocado
+5 = Entra/Sale
+6 = De entrada
+7 = De entrada escondido
+8 = de men&uacute;</PRE>
+<FONT FACE="Arial"><H3>Estilos de <I>browsers</I> (cajas de listas)</H3>
+</FONT><PRE>0 = Normal (ver nada m&aacute;s)
+1 = De selecci&oacute;n
+2 = Mantiene selecci&oacute;n
+3 = M&uacute;ltiples selecciones</PRE>
+<FONT FACE="Arial"><H3>Posici&oacute;n del letrero</H3>
+</FONT><FONT FACE="Arial" SIZE=2><P>La instrucci&oacute;n:</P>
+</FONT><PRE>XsL,22,1,;</PRE>
+<FONT FACE="Arial" SIZE=2><P>determina la posici&oacute;n en que aparecer&aacute; el letrero del objeto, seg&uacute;n el &uacute;ltimo argumento. Los posibles valores de este argumento son:</P>
+</FONT><PRE>0 = Centro
+1 = Arriba
+2 = Abajo
+4 = Izquierda
+8 = Derecha
+1 | 4 = Arriba izquierda
+1 | 8 = Arriba derecha
+2 | 4 = Abajo izquierda
+2 | 8 = Abajo derecha
+1 &lt;&lt; 13 = Interior</PRE>
+<FONT FACE="Arial"><H3>Estilos de cajas de ingreso</H3>
+</FONT><PRE>0 = Normal
+1 = Acepta solo flotantes
+2 = Acepta solo enteros
+3 = Acepta solo fechas
+4 = Texto con muchas l&iacute;neas
+5 = Entrada escondida
+6 = Entrada secreta</PRE>
+<FONT FACE="Arial"><H3>Estilos de contenedores tabulares</H3>
+</FONT><PRE>0 = Orejas arriba
+1 = Orejas abajo
+2 = Orejas a la izquierda
+3 = Orejas a la derecha</PRE>
+<FONT FACE="Arial"><H3>Los colores de los objetos</H3>
+</FONT><FONT FACE="Arial" SIZE=2><P>La instrucci&oacute;n para modificar el color est&aacute;ndar de un objeto es la siguiente:</P>
+</FONT><PRE>Xsc,48,col1,col2,;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>s = set, c = color</P>
+</B><P>El <B>col1</B> se refiere al que se usar&aacute; cuando el objeto est&eacute; presente pero <I>no seleccionado</I>.</P>
+<P>El <B>col2</B> es el que se usar&aacute; (en el fondo) cuando el objeto se encuentre seleccionado.</P>
+<P>Algunos colores son:</P>
+</FONT><PRE>0 = Negro
+1 = Rojo
+2 = Verde
+3 = Amarillo
+4 = Azul
+5 = Magenta
+6 = Cyan
+7 = Blanco
+8 = Tomate
+9 = Rojo Indio
+10 = Azul Slate
+18 = Verde p&aacute;lido
+19 = Dorado oscuro
+20 = Orqu&iacute;dea
+21 = Cyan oscuro
+22 = Tomate oscuro
+23 = Trigo
+24 = Naranja oscuro
+25 = Tinta profunda
+26 = Cartaruso
+27 = Violeta oscuro
+28 = Verde primavera
+29 = Azul dodger</PRE>
+<FONT FACE="Arial" SIZE=2><P>En esto de los colores, lo m&aacute;s conveniente es probar a la vista, sin importar mucho los nombres.</P>
+</FONT><FONT FACE="Arial"><H3>Teclas de acceso r&aacute;pido</H3>
+</FONT><FONT FACE="Arial" SIZE=2><P>Es conveniente permitirle al usuario navegar hacia cualquier objeto en forma directa a&uacute;n sin el rat&oacute;n. Un programa que s&oacute;lo le permite al usuario navegar mediante la tecla TAB o mediante el rat&oacute;n, normalmente ser&aacute; un programa bastante inc&oacute;modo.</P>
+<P>La instrucci&oacute;n para adjudicarle a un objeto una tecla r&aacute;pida es la siguiente:</P>
+</FONT><PRE>Xss,22,"#b",1,;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>s = set<BR>
+s = shortcut key</P>
+</B><P>El 22 es el recurso u objeto. Lo interesante es la serie que se pone despu&eacute;s:</P>
+</FONT><PRE># = La tecla ALT+Letra
+^ = La tecla CONTROL+Letra</PRE>
+<FONT FACE="Arial" SIZE=2><P>Por &uacute;ltimo, si el &uacute;ltimo argumento es <B>1</B>, la primera vez que aparezca la letra indicada en el letrero del objeto, &eacute;sta aparecer&aacute; subrayada. Si el tercer argumento es un <B>0</B>, entonces no se subraya ninguna letra en los letreros.</P>
+<P>En el caso de que no se encuentre la letra de acceso r&aacute;pido en el letrero, no se generar&aacute; ning&uacute;n error y funciona el acceso, pero no aparecer&aacute; ninguna letra subrayada, aunque se indique que as&iacute; lo haga con un <B>1</B>.</P>
+</FONT><FONT FACE="Arial"><H3>Asignar contenido del letrero</H3>
+</FONT><FONT FACE="Arial" SIZE=2><P>Cuando sea necesario cambiar el contenido de alg&uacute;n letrero, o bien para modificar el contenido de letreros aviso (objetos del tipo <I>texto normal)</I>, se puede usar esta instrucci&oacute;n:</P>
+</FONT><PRE>Xsl,22,"Algo",;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>s = set<BR>
+l = label</P>
+</B><P>El contenido de la serie puede provenir de una variable que contenga letras y n&uacute;meros terminados con un nulo.</P>
+</FONT><FONT FACE="Arial"><H2>Operaciones con los objetos</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>Cada objeto tiene su propia funcionalidad. Las funcionalidades compartidas por varios objetos tendr&aacute;n los mismos argumentos y l&oacute;gica aplicable.</P>
+</FONT><FONT FACE="Arial"><H3>Funcionalidad de las cajas de ingreso</H3>
+</FONT><PRE>Xig,6,sBuf,;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>i=input, g=get</B>. Tomar del objeto # 6 (que debe de ser una caja de ingreso) el contenido y colocarlo en la variable <I>sBuf</I>. El programa es responsable de que el tama&ntilde;o de <I>sBuf</I> sea lo suficientemente amplio para todo el contenido que se espera de la caja de edici&oacute;n.</P>
+</FONT><PRE>Xip,9,sBuf,;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>i=input, p=put.</B> Poner en el objeto # 9 (una caja de ingreso) el contenido de la variable <I>sBuf</I>.</P>
+</FONT><FONT FACE="Arial"><H3>Funcionalidad de cajas de listas o <I>browsers</H3>
+</I></FONT><PRE>XBa,42,sBuf,;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>a=add. </B>Agregar una l&iacute;nea m&aacute;s (al final). Los argumentos son los esperables. (Recurso 42; la l&iacute;nea se toma de la variable <I>sBuf</I>).</P>
+</FONT><PRE>XBs,44,sBuf,;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>s=selected. </B>Del objeto 44 (un <I>browser</I>) toma el contenido de la l&iacute;nea seleccionada y lo coloca en <I>sBuf</I>.</P>
+</FONT><PRE>XBn,18,lVal,;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>n=n&uacute;mero.</B> Del objeto 18, toma el <I>n&uacute;mero</I> de la l&iacute;nea seleccionada. Este n&uacute;mero queda en <I>lVal</I>.</P>
+</FONT><PRE>XBc,24,;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>c=clear.</B> <I>Limpia</I> de l&iacute;neas el objeto 24.</P>
+</FONT><PRE>XBg,18,lVal,;</PRE>
+<B><FONT FACE="Arial" SIZE=2><P>g=goto.</B> La l&iacute;nea <I>lVal</I> quedar&aacute; como <I>la seleccionada</I> en el objeto # 18.</P>
+</FONT><FONT FACE="Arial"><H3>Manipulaci&oacute;n del <I>tabfolder</H3>
+</I></FONT><PRE>XTa,12obj,sBuf,4f,;</PRE>
+<FONT FACE="Arial" SIZE=2><P>Esta instrucci&oacute;n tiene por objeto <I>relacionar</I> un <I>tabfolder</I> con una <I>forma</I>. Cuando se ejecuta esta instrucci&oacute;n, tanto el <I>tabfolder</I> como la <I>forma</I> ya deben de haber sido creados. El primer argumento (12obj) debe de ser el n&uacute;mero del objeto (un <I>tabfolder</I>) al cual se le relacionar&aacute; la forma # 4. El letrero de la oreja est&aacute; en <I>sBuf</I>. (Se escriben los n&uacute;meros fijos o variables, no las letras "obj" o "f").</P>
+</FONT><PRE>XTs,4,2,;</PRE>
+<FONT FACE="Arial" SIZE=2><P>Esta instrucci&oacute;n se usa para que se <I>muestre</I> (quede en primer plano), del <I>tabfolder 4</I>, la <I>p&aacute;gina</I> (o folder)<I> # 2</I>.</P>
+</FONT><PRE>XTg,4,lVal,;</PRE>
+<FONT FACE="Arial" SIZE=2><P>En <I>lVal</I> quedar&aacute; el n&uacute;mero de <I>folder</I> (o p&aacute;gina) activa para el objeto <I>tabfolder</I>, que es el recurso # 4.</P>
+</FONT><FONT FACE="Arial"><H2>Principio de Funcionamiento</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>Una vez que est&aacute;n definidos los objetos y sus formas, se puede comenzar por mostrar la forma principal. Para mostrar alguna forma se usa esta instrucci&oacute;n:</P>
+</FONT><PRE>XS,#form,lugar,bordes,"Cartera Pagos",;</PRE>
+<FONT FACE="Arial" SIZE=2><P>El primer argumento se refiere al recurso de forma (#forma) que se mostrar&aacute;. No puede ser &eacute;sta una de las formas <I>adscritas</I> a un <I>tabfolder</I>.</P>
+<P>Los argumentos <I>lugar y bordes</I> se refieren a los estilos o tipos de forma que se deber&aacute;n usar. La relaci&oacute;n de estos estilos y formas viene a continuaci&oacute;n:</P>
+</FONT><PRE>0 = Lugar y tama&ntilde;o libres
+1 = Se centra debajo del rat&oacute;n
+2 = Se coloca al centro de la pantalla
+4 = La posici&oacute;n se indica con instrucci&oacute;n
+8 = Posici&oacute;n libre pero tama&ntilde;o fijo
+16 = Colocarlo seg&uacute;n &uacute;ltima vez
+32 = Relaci&oacute;n ancho/alto constante
+64 = Pantalla completa
+128 = El rat&oacute;n queda en el HOTSPOT
+256 = Comienza iconificada</PRE>
+<FONT FACE="Arial" SIZE=2><P>En cuanto a los bordes, las posibilidades son:</P>
+</FONT><PRE>1 = Borde completo
+2 = Transitoria (poco borde)
+3 = Ning&uacute;n borde</PRE>
+<FONT FACE="Arial" SIZE=2><P>Por &uacute;ltimo viene el t&iacute;tulo que se ver&aacute; en la pantalla al correr el programa.</P>
+</FONT><FONT FACE="Arial"><H3>El proceso</H3>
+</FONT><FONT FACE="Arial" SIZE=2><P>En VPG podr&iacute;an dise&ntilde;arse literalmente decenas de formas de combinar las instrucciones que esperan los eventos de las formas.</P>
+<P>A continuaci&oacute;n exponemos un ejemplo de la organizaci&oacute;n del programa. Es solo <I>un ejemplo</I>; cualquier programador experimentado en VPG podr&aacute; pensar en decenas de posibilidades.</P>
+</FONT><PRE>{
+&nbsp;&nbsp;XD,10,Act1,11,Act2,12,Act3,13,Act4,22,FIN,;
+
+&nbsp;&nbsp;[Act1; * esto hace tal cosa *
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GSubRutina1;
+&nbsp;&nbsp;g-;
+
+&nbsp;&nbsp;[Act2; * otra acci&oacute;n *
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GSuburtina4;
+&nbsp;&nbsp;g-;
+
+&nbsp;&nbsp;[Act3; * la actividad 3 *
+&nbsp;&nbsp;&nbsp;&nbsp;{ XD,21,Act21a,; [Act21a; ...; g-; [Act22b; ...; g-; )
+&nbsp;&nbsp;g-;
+
+&nbsp;&nbsp;...;
+
+)
+
+[FIN; };</PRE>
+<FONT FACE="Arial" SIZE=2><P>La instrucci&oacute;n clave aqu&iacute; es <B>XD...;</B>. Cuando el programa llega a esta instrucci&oacute;n, internamente forma un arreglo de objetos (con el objeto de agilizar la comparaci&oacute;n cuando llegue el evento). Cuando llega el evento, trata de encontrar un objeto (de los programados) que coincida con &eacute;se del cual proviene el evento. Si encuentra uno, dirige el control del programa hacia la instrucci&oacute;n correspondiente.</P>
+<P>La letra <B>D</B> est&aacute; por el verbo <B>DO</B> (hacer <I>las formas</I>).</P>
+<P>N&oacute;tese que en cualquier punto, una de las acciones puede ser, a su vez, la activaci&oacute;n de <I>otro rizo de acciones</I>. En el segundo rizo de acciones, el programador puede decidir cu&aacute;les son los objetos a los cuales se les har&aacute; caso y descartar todos los dem&aacute;s. Esto obligar&aacute; al usuario a tomar una acci&oacute;n antes de que se salga de ese grupo de instrucciones, que pueden referirse a objetos dentro de una forma asignada a un <I>tabfolder</I>.</P>
+<P>El programador deber&aacute; considerar la acci&oacute;n para salirse del programa en forma civilizada. Si es necesario o conveniente llevar al cabo tareas de cierre de conexiones, de compromiso de cambios en tablas, etc., esta acci&oacute;n de salir del programa debe de estar perfectamente definida.</P>
+</FONT><FONT FACE="Arial"><H2>De los letreros</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>Si la primera letra de un letrero es una arroba (@), entonces el contenido (texto) del letrero ya no ser&aacute; textual, sino que se cambiar&aacute; por una figura. Son m&uacute;ltiples las figuras que pueden lograrse en esta forma. Se le invita al programador a experimentar utilizando en vez de letreros textuales, letreros que llevar&aacute;n figuras usando las combinaciones de estos s&iacute;mbolos: -&gt;, &lt;-, &lt;-&gt;, |&gt;, &gt;|, etc.</P>
+<P>Esta figura muestra un ejemplo del programa VPG4S en plena acci&oacute;n, con algunas figuras en vez de letreros:</P>
+</FONT><P ALIGN="CENTER"><IMG SRC="expevp.gif" WIDTH=508 HEIGHT=437></P>
+<FONT FACE="Arial" SIZE=2><P>Los objetos que tienen en vez de letreros, figuras, fueron creados por medio de estas instrucciones:</P>
+<P>Xai,3,0,65,85,100,20,"@</FONT><FONT FACE="Courier New" SIZE=2>-&gt;</FONT><FONT FACE="Arial" SIZE=2>",; forma esto: <IMG SRC="exflecha.gif" WIDTH=165 HEIGHT=27></P>
+<P>Xai,11,0,220,40,260,20,"@</FONT><FONT FACE="Courier New" SIZE=2>&lt;-&gt;</FONT><FONT FACE="Arial" SIZE=2>",; forma esto: <IMG SRC="exflegra.gif" WIDTH=250 HEIGHT=32></P>
+</FONT><FONT FACE="Arial"><H2>Algunas observaciones</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>Cuando un programa X VPG comienza a correr, si &eacute;ste es llamado desde una sesi&oacute;n <I>xterm</I>, es factible <I>dirigir</I> a la salida est&aacute;ndar todos los mensajes de progreso o de posible error. Sin embargo, los mensajes de error que provengan del funcionamiento regular del programa deber&aacute;n ser enviados, ya sea a un archivo en disco o bien, deber&aacute; de crearse una forma especial con un objeto receptor de estos mensajes que puede mantenerse guardado y solamente ser mostrado cuando un error importante se est&eacute; presentando.</P>
+</FONT><FONT FACE="Arial"><H2>Desarrollo de la secci&oacute;n para X-Window</H2>
+</FONT><FONT FACE="Arial" SIZE=2><P>Se cuenta en el momento presente con una lista de futuras mejoras para el funcionamiento bajo X-Window. Las mejores consistir&aacute;n principalmente en la a&ntilde;adidura de algunos objetos y en el enriquecimiento de las acciones sobre los objetos.</P>
+<P>Todas las sugerencias son bienvenidas, sin promesas.</P>
+</FONT><P><A HREF="mailto:ffortuny@ivsol.com"><FONT FACE="Arial" SIZE=2>Franz J Fortuny</FONT></A></P>
+<FONT FACE="Arial" SIZE=2><P>(28 de junio de 1999) </P></FONT></BODY>
+</HTML>

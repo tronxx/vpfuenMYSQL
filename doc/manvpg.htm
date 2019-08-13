@@ -1,0 +1,1458 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.04 [en] (Win95; I) [Netscape]">
+   <META NAME="Author" CONTENT="Franz J Fortuny">
+   <TITLE>The VPG Language Complete Reference</TITLE>
+</HEAD>
+<BODY TEXT="#663300" BGCOLOR="#FFFFCC" LINK="#0000FF" VLINK="#FF0000" ALINK="#000088" font>
+
+<CENTER>
+<H1>
+The VPG Language Complete Reference</H1></CENTER>
+
+<DIV ALIGN=right><B>&nbsp;<A HREF="vpgcgi.htm">The VPG-CGI Connection</A></B></DIV>
+
+<DIV ALIGN=right></DIV>
+<B>Important!</B> This page --a rather large one-- contains every single
+piece of information (except <B>database</B> and <B><A HREF="vpman/index.htm">sql</A></B>)
+you need to know in order to write complete standalone and client/server
+applications under the Linux (and other Unixes) and the Win32 operating
+systems. (The Win32 GUI environment instructions can be found in file <B>vcon.hlp</B>,
+included in the Win32 package). Print this page. This is your handy VPG
+manual. If you have any questions, <A HREF="mailto:ffortuny@ivsol.com">send
+me e-mail</A>, especially now that this page is <B>under construction (more
+than 92% done by Feb 9, 1998).</B>
+<BLOCKQUOTE><B><I><FONT COLOR="#FF0000">The instructions that start with
+letter 't'&nbsp; and the input/wait statements are the <U>only</U> VPG
+instructions that are not practical under the Win32 platform. Everything
+else presented here is common to all platforms.</FONT></I></B></BLOCKQUOTE>
+The procedure to create and run <B>VPG</B> programs is very simple:
+<OL>
+<LI>
+Edit with your favorite programmer's file editor the VPG source file. Let's
+assume you call this <B>"myvpg.p".</B></LI>
+
+<LI>
+Then compile it: <B>vp myvpg.p</B> (will produce <B>myvpg.vp</B>)</LI>
+
+<LI>
+Then run it: <B>vpg4 myvpg.vp</B></LI>
+</OL>
+Use compiler <B>vps</B> (instead of <B>vp</B>) and runtime <B>vpg4s</B>
+(instead of <B>vpg4</B>) if your source was written as a client for the
+<B>Solid SQL Server</B>.
+<BLOCKQUOTE><I>The DATABASE (<B>vpg4-vp</B>, using local, flat, propieatary
+data base structures) and the <A HREF="vpman/bbdata.htm">SQL related</A>
+(<B>vpg4s-vps</B>, requiring the Solid SQL Server running on any machine
+with any operating system in the network) instructions are NOT included
+here. Please, follow the indicated links.</I></BLOCKQUOTE>
+
+<HR WIDTH="100%">
+<H2>
+Contents:</H2>
+(Read the whole thing first. Then use this index to review specific sections).
+
+<P><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#flowcontrol">Flow Control
+in VPG</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#loops">Loops</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#ifthenelse">If-then-else
+constructs</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#funkeys">Function keys
+and flow control</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#termcontrol">Controlling
+the look of the screen</A></FONT></B>
+<BR>&nbsp;<B><FONT FACE="Arial,Helvetica"><A HREF="#screepres">Working
+with screen presentation</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#windows">Windowing
+in VPG (Console Mode)</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#printdata">Printing
+formatted data to consoles and text files</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#cookedoutin">Cooked
+output and input (console mode)</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#localfiles">Handling
+text and data LOCAL files</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#time">Handling Time
+and Date</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#execshell">Executing
+shells or other programs from VPG</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#sleep">Making the program
+do nothing for a while</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#choicesandflow">Practical
+VPG Instructions to offer choices to users (Menus, etc).</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#assignment">Assignmet
+to numerical variables and math computations</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#rounding">Rounding
+double values</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#stringassing">String
+assignment</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#comparing">Comparing
+and deciding the flow</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#andor">AND and OR in
+comparisons</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#misceoutput">Miscellaneous
+output statements</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#memory">Memory related
+instructions</A></FONT></B>
+<BR><B><FONT FACE="Arial,Helvetica">&nbsp;<A HREF="#keybinput">Keyboard
+input statements</A></FONT></B>
+<BR>&nbsp;<B><FONT FACE="Arial,Helvetica"><A HREF="#reports">Paginated
+Reports with VPG<BR>
+</A></FONT></B>&nbsp;<B><FONT FACE="Arial,Helvetica"><A HREF="vpgcgi.htm">NEW!
+The VPG-CGI Connection</A></FONT></B>
+<BR>
+<HR WIDTH="100%">
+<H2>
+<A NAME="flowcontrol"></A>Flow Control</H2>
+As any programmer would expect, all VPG instructions flow from top to bottom
+and from left to right. Instructions end in <B>' ; '</B>. You can place
+as many instructions on a line as you wish. Or you can place the instructions
+one by line.
+
+<P>When an <I>asterisk ( * )</I> is found, the compiler ignores everything
+until another astersik is found. The only symbols you can't place within
+your comments are asterisks.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>gLABEL;</FONT></FONT></TT></B>
+radically changes the flow and sends it to LABEL.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>tbLabel;</FONT></FONT></TT></B>
+go to "Label" if user types a Control-C at the keyboard. The program will
+run normally, however, during a loop or normal program execution, if the
+user types a Control-C, the signal will be caught and when the next instruction
+is executed, the control will jump to "Label".
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>GLABEL;</FONT></FONT></TT></B>
+diverts the flow to LABEL BUT the flow will continue when instruction <B>R;</B>
+is encountered (somewhere <I>after</I> the LABEL point). Observe this:
+<PRE><FONT COLOR="#3333FF">...; ...; GThatPlace; n...; n...;
+gEnd;</FONT></PRE>
+
+<PRE><FONT COLOR="#3333FF">[ThatPlace; ...; ...;
+...; ...; ...;
+R;</FONT></PRE>
+
+<PRE><FONT COLOR="#3333FF">[End;</FONT></PRE>
+
+<PRE><FONT COLOR="#3333FF">};</FONT></PRE>
+Did you get the idea? <B>g...; is radically different from G...;</B>. Observe
+the sample code in blue.
+<OL>
+<LI>
+The VPG instructions are being executed one after the other, until</LI>
+
+<LI>
+GThatPlace is encountered. The flow goes to spot [ThatPlace;.</LI>
+
+<LI>
+Execution continues normally until <B>R;</B> is encountered. Then control
+returns to instruction <B>n...;</B>.</LI>
+
+<LI>
+Then instruction <B>gEnd;</B> is encountered. Flow is radically diverted
+to spot marked by label <B>[End;</B>.</LI>
+</OL>
+If another G...; is found within a subroutine, then flow goes to that second
+level subroutine. An <B>R;</B> instructions <B>must exist</B> for each
+<B>G..;</B> instruction. The depth is 512. Forget recursive logic!
+
+<P>All VPG programs should end <I>physically and logically</I> by encountering
+expression <B>};</B> . The VPG compiler <B><I>needs to find symbol <U>};</U>
+in order to do its job</I></B>. It stops compilation when it finds this
+symbol, no matter what might continue after it.
+<H3>
+<A NAME="loops"></A>Loops</H3>
+You create a loop in VPG by enclosing the instructions that you need cyclically
+repeated inside <B>{ </B>and <B>)</B>, as follows:
+<PRE><B><FONT COLOR="#3333FF"><FONT SIZE=+2>{
+&nbsp; ...;
+&nbsp; ...;
+&nbsp; !( )>+;
+&nbsp; !( )( )>-;
+&nbsp; g+;
+&nbsp; ....; ...; !() ()>|; ...; ....; g-; .
+&nbsp; ....; ...;
+)</FONT></FONT></B></PRE>
+You should have the idea by just looking at the blue code. <B>{</B> starts
+the loop. Then all the instructions are executed as usual. If a <B><I>flow
+control expression</I></B> is found, then something happens: symbol + EXITS
+the loop. Symbol MINUS (-) <I>continues the loop at the beginning</I> without
+executing whatever would continue after it. Of course, it is the logic
+of your program in general what will determine when you place a g-; or
+a g+; instruction.
+
+<P>Yes, you can build loops inside loops. No practical limit.
+<H3>
+<A NAME="ifthenelse"></A>If-then-else constructs</H3>
+A number of VPG <I>flow control</I> instructions end up directing the flow
+with a bar | plus the semicolon ;, like this:
+<PRE><B><FONT COLOR="#3333FF"><FONT SIZE=+2>...>|;
+&nbsp; ...;&nbsp; * if true do this *
+&nbsp; ...;
+|
+&nbsp; ...;&nbsp; * if false do this *
+&nbsp; ...;
+.</FONT></FONT></B></PRE>
+
+<PRE><B><FONT COLOR="#3333FF"><FONT SIZE=+2>or</FONT></FONT></B></PRE>
+
+<PRE><B><FONT COLOR="#3333FF"><FONT SIZE=+2>...>|;
+&nbsp;&nbsp; ....; * if true do this *
+&nbsp;&nbsp;&nbsp; ...; * nothing special if false *
+.</FONT></FONT></B></PRE>
+You must have the idea by looking at the blue code! The bar ( | ) indicates
+that flow should continue with the instructions contained either between
+the bar and another bar (if TRUE and FALSE conditions require special sections)
+or simply after the bar and until a DOT ( . ) is encountered. You can prevent
+what will happen if the test is TRUE (instructions between bar and bar)
+and what will happen if the same test is FALSE (instructions between second
+bar and DOT). Or you can simply place special code if test is TRUE (between
+bar and DOT, no bar in between).
+
+<P>Of course, inside the sections you can place code to send the program
+to subroutines, etc. You can also place some more if-then-else constructs.
+<H2>
+<A NAME="funkeys"></A>Function keys and flow control</H2>
+A user touching a FUNCTION KEY (F1-F12 plus shift-F1 to shift-F12, etc.)
+is an <I>event</I> that can take place during an <A HREF="#keybinput">input
+instruction</A> or during any of the <A HREF="#choicesandflow">statements
+that simply <I>wait</I></A> for the user to touch a key.
+
+<P>In VPG it is possible to <I>catch</I> those events and DO SOMETHING
+depending on the actual contents of the event (the function key touched).
+That is, the program flow can be redirected to a <I>label, </I>do something
+and either return to the same input/wait instruction that was in progress
+when the function key was touched, or simply divert the flow to a new section
+of the program (end the program?).
+
+<P>VPG provides a way to <I>catch</I> the <I>function key touching events</I>
+by <I>programming</I> the keys the program should pay attention to, ignoring
+the others. It is combining the following instructions that you can write
+programs aware of function keys.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>Kfnn,Label,fnn,Label;</FONT></FONT></TT></B>
+'fnn' should be a CONSTANT value, the value of the function key that, when
+touched, will cause the program flow to go to 'Label'. Remember: this instruction
+<I>merely preprograms</I> the keys that will be attended when the user
+touches a function key while in an input or wait instruction. Nothing happens
+externally or visible to the user when this instruction is executed.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>];</FONT></FONT></TT> </B>This
+<I>end-of-subroutine</I> mark should be placed at the end of the instructions
+that should be executed when the user touches a programmed function key
+of type 'K'. When this mark is encountered, the flow of the program will
+continue at the input or wait instruction that was running when the user
+touched the function key.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>&lt;fnn,Label,fnn,Label;</FONT></FONT></TT></B>
+This instruction also programs the function keys but in such a way that
+the code at "Label" <I>does not end</I> with a special mark to <I>return</I>.
+The flow is diverted and will continue according to a rather free plan.
+<BLOCKQUOTE><B><I>The values returned by the function keys can be obtained
+by using program <U>valtec</U> (included in the VPG package for LINUX).
+This value should be the same for terminals and for the console. If the
+value shown at terminals is not the same as the value shown at the console,
+then you should fix your /usr/lib/terminfo file. To run <U>valtec</U> simply
+type its name and then touch the function keys (direction and pagination
+keys included) and write down the value returned. You exit <U>valtec</U>
+by typing Control-C.</I></B></BLOCKQUOTE>
+<B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>EK;</FONT></FONT></TT></B> Use
+this instruction to <I>erase</I> any previously programmed keys of type
+'K'.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>E&lt;;</FONT></FONT></TT></B>
+Use this instruction to <I>erase</I> any programmed keys of type '&lt;'.
+
+<P>
+<HR WIDTH="100%">
+<H2>
+<A NAME="screepres"></A>Working with screen presentation</H2>
+<B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>tPscreen.s~;</FONT></FONT></TT></B>
+'screen.s' should be the name of an existing and accessable text file.
+The user running the program should have permission to READ this file.
+(The '.s' ending is customary but not mandatory). The structure of this
+file could be either one of the following:
+
+<P><B>Preformatted screen</B> The file contains <I>one first line</I> with
+an uppercase 'A'. All the lines after this first line will be displayed
+on the screen EXACTLY as they appear in the screen file, one by one. All
+the characters will be displayed in the attribute that was active at the
+moment the statement was executed. Example:
+<PRE><FONT COLOR="#006600">A
+Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Phone:
+Add1:
+Add2:
+City:
+
+E-Mail:</FONT></PRE>
+<B>Row-Column-Text</B> The file contains lines that start with two digits,
+a space, two digits, a space and zero or more characters up to an end of
+line. The first two digits represent the <I>row</I> where the string will
+be displayed. The second two digits represent the <I>column</I>. Whatever
+follows after the space of the second pair of digits represents the text
+that will be displayed at the <I>row-column</I> indicated. Example:
+<PRE><FONT COLOR="#006600">00 22 User's options:
+05 30 1-Accounting
+06 30 2-Receivables
+07 30 3-Payables
+08 30 4-Credit system</FONT></PRE>
+
+<BLOCKQUOTE><I>The VPG package for Linux includes the utility <B>forpan</B>
+to aid the programmer in the tedious work of designing screens.</I></BLOCKQUOTE>
+<B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>tLscreen.pos~;</FONT></FONT></TT></B>
+File "screen.pos" should be a text file containing lines with a structure
+identical to that explained for <I>Ros-Column-Text</I>. However, the purpos
+of the ".pos" files is to make it easier for the programmer (you) to locate
+elements on the screen. After "<B>tL...;</B>" has been executed, your program
+contains locations (from 0 to N) that you can access and use with the following
+instruction.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>tLNN;</FONT></FONT></TT></B>
+NN should be a <B><I>constant</I></B> numerical value from 0 to 99 (default)
+or to any value you may have demanded with instruction "<B>tpNNN;</B>".
+The cursor will be located at the row and column indicated by line 'NN'
+of the last accessed file "screen.pos". The first line is line zero: "<B>tL0;</B>"
+will locate the cursor at the row and column indicated by the first line
+of the ".pos" file.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>tpNNN;</FONT></FONT></TT></B>
+You use this instruction when you need more than 100 positions for a <B>"tLNN;"</B>
+statement. 'NNN' will be the new maximum number of positions you will be
+able to read with "<B>tLfile.pos</B>".
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>tL+[rc]; tL-[rc];</FONT></FONT></TT></B>
+If you need to move the position of a number of objects at runtime, you
+can use this instruction with the proper sign (+ or -) and the proper letter
+(r for rows and c for columns). It will increase or decrease the internal
+array of positions for the rows or the columns. <B>"tL+r;"</B> will increase
+the value of all the rows. The new display will look as if the objects
+had been pushed downwards.
+<BR>&nbsp;
+<CENTER><TABLE BORDER CELLPADDING=4 WIDTH="95%" >
+<TR>
+<TD COLSPAN="2">
+<H3>
+<A NAME="termcontrol"></A>Terminal output control</H3>
+All VPG instructions beginning with letter <B>'t'</B> and related to placing
+characters on the screen require the mode of the terminal or console to
+be set to <B>"raw"</B>. Use instruction <B>"tr;"</B> to do this.&nbsp;
+
+<P><B><I>The instructions that start with letter 't' are the <U>only</U>
+VPG instructions that are not practical under the Win32 platform.</I></B></TD>
+</TR>
+
+<TR>
+<TH ALIGN=LEFT VALIGN=TOP WIDTH="26%">
+<CENTER><B><FONT SIZE=+1>The Instruction</FONT></B>&nbsp;</CENTER>
+</TH>
+
+<TH ALIGN=LEFT VALIGN=TOP WIDTH="74%">
+<CENTER><B><FONT SIZE=+1>How it works and what it does</FONT></B></CENTER>
+</TH>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF">tr;</FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Terminal raw. Characters typed are passed on
+to the program one by one. The main screen (console) becomes a full size
+window (# 0).</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP COLSPAN="2"><A NAME="windows"></A><B>Windows. </B>In "curses"
+a "window" is an area of the screen defined to be of certain size (rows
+x columns) inside of which a program can write without any consideration
+of the limits. Text will wrap at end of lines in lengthy lines and lines
+will scroll up as they are added. VPG can handle 30 windows at a time.
+See instructions <B>tS..; - tM; - tR; and qf..;</B> ahead. Window # zero
+is the main screen and occupies the full size of the monitor's display
+area.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>tc;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Terminal cooked. Characters typed are not passed
+on to the program until the user presses the ENTER key.</TD>
+</TR>
+
+<TR>
+<TD><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>tv0; tv1;</FONT></FONT></TT></B></TD>
+
+<TD>This is an extremely important instruction. You need to use "tv1;"
+whenever you are sending output to a <I>window</I>. However, you must set
+the program to "tv0;" when your output will be going to a disk file or
+to standard or standard error output.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>tf;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Terminal form feed. Clear screen. <B>tr;</B>
+should be set (terminal raw).</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>tp;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Display <B>bold or high intensity </B>characters.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>tn;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Display normal (not bold) characters.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>ta1;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Set the <FONT COLOR="#FF0000">inverse</FONT>
+property ON for characters to be displayed.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>ta2;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Set the <U>underline</U> property ON...</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>ta3;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Set the <BLINK><FONT COLOR="#800000">blinking</FONT></BLINK>
+property ON...</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>ta4;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Set the <FONT COLOR="#808080">dim</FONT> property
+ON...&nbsp;</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>ta0;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Set all special display properties to OFF.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>t@iRow,iCol;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Place the cursor (move the cursor) to row #
+"iRow" and column # "iCol".</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>ti;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Move the line under the cursor downwards and
+leave blank the space it was occupying. (Insert line down).</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>td;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Delete the line under the cursor and pull upwards
+all the lines that were below. (Delete line up). The last line on the screen
+becomes blank.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>tl;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Erase to end of line.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>te;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Erase to end of screen.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><FONT COLOR="#3333FF"><FONT SIZE=+1><B><TT>tBiHeight,</TT></B>&nbsp;</FONT></FONT>&nbsp;
+<BR><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>iWidth;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Make a box with its upper left corner at present
+coordinates. The box will be "iHeight" rows and "iWidth" columns in size.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>tS<I>D,iRow,iCol,</I></FONT></FONT></TT></B><FONT COLOR="#3333FF"><FONT SIZE=+1>&nbsp;</FONT></FONT>&nbsp;
+<BR><FONT COLOR="#3333FF"><FONT SIZE=+1><B><I><TT>iHeight,</TT></I></B>&nbsp;</FONT></FONT>&nbsp;
+<BR><B><I><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>iWidth;</FONT></FONT></TT></I></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Create window # <I>D</I> with its upper left
+corner at the current cursor position. The new window will be "iHeight"
+rows by "iWidth" columns in size. It becomes the current window.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>tSD;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Make window # D the current one.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>tM;</FONT></FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Create a box on the edges of the current <I>window</I>.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP WIDTH="26%"><B><TT><FONT COLOR="#3333FF">tRD;</FONT></TT></B></TD>
+
+<TD VALIGN=TOP WIDTH="74%">Destroy window # D.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP><A NAME="printdata"></A><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>psVar,#;</FONT></FONT></TT></B></TD>
+
+<TD>The contents of variable "<B><TT>sVar</TT></B>" will be printed including
+"<B>#</B>" characters. If the string ends with a NULL before the total
+count of # characters has been reached, the rest of the columns will be
+filled with blanks.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP><FONT COLOR="#3333FF"><FONT SIZE=+1><B><TT>pdVar,%,12.2f~;</TT></B>&nbsp;</FONT></FONT>&nbsp;
+<BR><FONT COLOR="#3333FF"><FONT SIZE=+1><B><TT>plVar,%8ld~;</TT></B>&nbsp;</FONT></FONT>&nbsp;
+<BR><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>piVar,%6d~;</FONT></FONT></TT></B></TD>
+
+<TD>The <I>double, long or short </I>value contained in variables "dVar",
+"lVar" and "iVar" will be printed using the masks that follow. Notice that
+the comma is NOT an option under regular 'C' masks. The end of the mask
+should be marked with the tilde (~).</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>pDVar,+10;</FONT></FONT></TT></B></TD>
+
+<TD>The date (long) contained in variable "DVar" will be printed using
+format "MM/DD/CCYY".</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP>
+<PRE><B><FONT COLOR="#3333FF"><FONT SIZE=+1>\ABCDabcd d d\;</FONT></FONT></B></PRE>
+</TD>
+
+<TD>Anything within the '\' (inside back slash) will be printed, except
+back slash and ';' (semicolon) characters.</TD>
+</TR>
+
+<TR>
+<TD><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>qf, ... , ;</FONT></FONT></TT></B></TD>
+
+<TD>Instruction to <B>post</B> input forms. <A HREF="addits.htm#formsvpg">See
+detailed explanation</A>.</TD>
+</TR>
+
+<TR>
+<TD COLSPAN="2">
+<CENTER>
+<H2>
+<A NAME="cookedoutin"></A>"Cooked" Output/Input Control</H2></CENTER>
+For the following instructions to work, the <I>window</I> should be set
+to <B>"tc;"</B> or "terminal cooked". The opposite is <B>"tr;"</B>, which
+allows cursor control and character input mode.&nbsp;
+
+<P>The following instructions apply also to general manipulation of files
+that contain text lines or records with predefined structures that can
+be directly accessed by their absolute byte positions in the disk files.</TD>
+</TR>
+
+<TR>
+<TD><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>Ff1; Ff2; ... Ff9;</FONT></FONT></TT></B></TD>
+
+<TD>When a VPG program starts running, it is possible to select one from
+10 possible input/output channels. Of these, 3 channels have been predefined:&nbsp;
+<CENTER><TABLE BORDER=0 >
+<TR>
+<TD VALIGN=TOP><B>Ff0;</B></TD>
+
+<TD>This channel has been reserved for <B>standard input</B>. Instruction
+<B>FG...;</B> makes use of this channel when it reads input data from the
+terminal or console <I>keyboard</I>.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP><B>Ff1;</B></TD>
+
+<TD>This is connected to the <B>standard output</B> channel. When this
+channel is active, all VPG instructions that generate output, send their
+contents to the terminal or console <I>screen</I>. Also, if a program that
+generates output is written using this channel, it will have the advantage
+of <I>redirecting</I> its production at runtime according to the user's
+needs, using the operating system's shell <I>greater than </I>">" and <I>bar
+</I>"|" characters.</TD>
+</TR>
+
+<TR>
+<TD VALIGN=TOP><B>Ff2;</B></TD>
+
+<TD>This is connected to the <B>standard error</B> channel. Anything written
+through this channel will always go to any device defined as the "standard
+error" device at runtime. This is usually the terminal or console screen.</TD>
+</TR>
+</TABLE></CENTER>
+
+<CENTER><B>All the other channels (Ff3 through Ff9) can be related to disk
+text files.</B></CENTER>
+</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF"><FONT SIZE=+1><B>FGLabel;</B>&nbsp;</FONT></FONT></TT>&nbsp;
+<BR><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>FG|; ...[ | ...] .</FONT></FONT></TT></B></TD>
+
+<TD>This instruction <I>accepts input from the terminal or console keyboard</I>
+or the active <I>text file </I>until EOF (End of File) is generated (or
+reached). (Control-D is used for EOF). When <B>FG...;</B> is used to accept
+input, this input goes to a special buffer related to the channel being
+used for input. When EOF is reached (or generated), the program flow continues
+at the spot indicated by the <B>Label</B> or <B>FCE</B> (<B>flow control
+expression)</B>.</TD>
+</TR>
+
+<TR>
+<TD><A NAME="localfiles"></A><B><FONT COLOR="#3333FF">FO<I>name~,r[aw][tb]~;</I></FONT></B></TD>
+
+<TD>This statement <B>opens</B> a text file. If the mode is 'w' or 'a',
+the file is created if it didn't exist at the timpe it was requested. If
+the mode is 'w', and the file existed at the moment it was requested, the
+existing file is truncated to size 0. If the mode is 'a' and the file existed
+at the moment it was requested then all new lines added to the file will
+be appended at the end.</TD>
+</TR>
+
+<TR>
+<TD><TT><FONT COLOR="#3333FF"><FONT SIZE=+1><B>FC</B>;</FONT></FONT></TT></TD>
+
+<TD>The active file channel is closed and the program won't be able to
+execute any more operations on the file that was related to that channel
+until it is opened again, (through the same or through a different channel).
+All files should be closed if their contents won't be necessary any more
+or their new contents should be rendered visible to other running programs.</TD>
+</TR>
+
+<TR>
+<TD><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>FW[0-9];</FONT></FONT></TT></B></TD>
+
+<TD>All text files opened for <I>reading</I> receive an internal buffer
+that can hold lines of 1024 bytes in length. This buffer is filled with
+characters up to an end-of-line marker every time <B>FG</B> is used. Then,
+<B>FW</B>n can be used to write to the <I>active</I> output channel the
+contents (the line) of the input channel that corresponds to digit 'n'
+that follows the 'W'. Observe this example:&nbsp;
+<PRE><FONT COLOR="#3366FF">Ff3; FGEOF; Ff1; FW3;</FONT></PRE>
+Channel 3 reads a line. Channel 1 is set active and then the line from
+channel 3 is written to channel 1 output. <B>The end-of-line mark is NOT
+appended. You must use ' l; ' in order to generate a new line.</B></TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">FksVar,#; FksVar,0;</FONT></B></TD>
+
+<TD>The input buffer of the active text channel is copied to variable "sVar".
+A total of "#" characters are copied or up to a null byte if "#" is 0 (zero).</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">FrsVar,#,EOFLabel;</FONT></B></TD>
+
+<TD>Up to "#" bytes are read from the active TEXT channel file and placed
+into buffer "sVar". If end of file is encountered then the program continues
+at label "EOFLabel".</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">FwsVar,#;</FONT></B></TD>
+
+<TD>Up to "#" bytes are written from buffer "sVar" to the active channel
+which should be open in write or append mode.</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">FT;</FONT></B></TD>
+
+<TD>Prepare the active channel file so that next read operation will begin
+at the TOP of the file (from the first byte or byte # zero).</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">FE;</FONT></B></TD>
+
+<TD>Prepare the file so that the next write operation will place its output
+at the end of the file. A read operation would cause and EOF condition
+if tried after this instruction.</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">FSlvar;</FONT></B></TD>
+
+<TD>Prepare the active channel file so that next read operation will begin
+at the byte position indicated in variable "lval" (a long value).</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">FLlvar;</FONT></B></TD>
+
+<TD>Store in "lvar" (a 32-bit long value) the byte position of the active
+file.</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF"><U>Fsc</U>sBuf1,sBuf2;</FONT></B></TD>
+
+<TD>The contents of buffer "sBuf2" are <I>appended</I> to buffer "sBuf1".
+Both buffers should end in nulls (byte # 0 [zero]).</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF"><U>Fse</U>sBuf1,#,iVar;</FONT></B></TD>
+
+<TD>Variable "sBuf1" contains a string possibly with blanks at the end.
+This string has a maximum size of "#" bytes. Variable "iVar" will receive
+the value corresponding to the number of <I>non-blank</I> characteres contained
+in it (before the end). The count starts at the first non-blank character
+encountered from right to left, starting at byte number "# - 1".</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF"><U>Fsl</U>iVar,sBuf;</FONT></B></TD>
+
+<TD>The length of string "sBuf" will be stored in variable "iVar".</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">F!LABEL,sBuf;</FONT></B></TD>
+
+<TD>The contents of buffer "sBuf" will be compared to the contents of the
+internal buffer attached to the active file. Control of the program will
+be diverted to "LABEL" if both buffers contain identical strings. Both
+strings should end in NULLS.</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">FcNN,FF;</FONT></B></TD>
+
+<TD>Buffer of file FF will be measured and centered considering a total
+line extension of "NN" spaces. (This works on the screen or in a file when
+fixed width characters are being used).</TD>
+</TR>
+
+<TR>
+<TD><B><FONT COLOR="#3333FF">FcNN,\String...~;</FONT></B></TD>
+
+<TD>The string will be centered within NN spaces. The string should be
+coded starting after the \ backslash and ending with an umlaut (character
+126) ' ~ '.</TD>
+</TR>
+</TABLE></CENTER>
+&nbsp;
+<H2>
+<A NAME="time"></A>The Time</H2>
+The following statements are all related to time and date.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+1>&amp;f0; &amp;f1;</FONT></FONT></TT></B>
+
+<P>These statements <B><I>prepare</I></B> the program for one of two states.
+<B>&amp;f0; </B>prepares the program so that it will print dates using
+the American format: Month/Day/Year. <B>&amp;f1;</B> prepares the program
+so it will use the European format: Day/Month/Year.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>&amp;dlRec,Ddat1,Dat2;</FONT></FONT></TT></B>
+
+<P>Variable "lRec" is capable of holding a 32-bit long value. This variable
+will receive a value that refers to the <B>distance</B> in days between
+"Ddat1" and "Ddat2". If you want a positive value, place the LATEST date
+in "Ddat1".
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>&amp;lsBuf,DBuf;</FONT></FONT></TT></B>
+
+<P>Variable "sBuf" is a string that contains a date of the form Day/Month/Year
+or Month/Day/Year (depending on &amp;f...;). "DBuf" is a 32-bit value capable
+of containing the Unix date (number of seconds since year 1970). "DBuf"
+will receive the value that represents the date given in the string.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>&amp;+DRec,DBuf2,iVal; &amp;-DRec,DBuf2,iVal;</FONT></FONT></TT></B>
+
+<P>"DRec" is a buffer of type "<B>vpg date"</B> that will receive the value
+of the date contained in "Dbuf2" plus (+) the number of days contained
+in "iVal" (short). The days in "iVal" will be <I>deducted</I> if the symbol
+is minus (-).
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>&amp;a;</FONT></FONT></TT></B>
+
+<P>Use <B><I>current time</I></B> (real time, the computer time) in instructions
+that place the time in a variable.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>&amp;bDBuf;</FONT></FONT></TT></B>
+
+<P>Use the time value contained in "DBuf" in instructions that place the
+<I>given time</I> in a variable.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>&amp;p?sBuf;</FONT></FONT></TT></B>
+
+<P>Using either the <I>current time</I> or the time in a specified buffer,
+print a string (a human readable string) of the representation of the time
+(and date or both) according to the following digits instead of the interrogation
+sign (?):
+<BR>&nbsp;
+<CENTER><TABLE WIDTH="100%" >
+<TR>
+<TD>1</TD>
+
+<TD>YYMMDD</TD>
+</TR>
+
+<TR>
+<TD>2</TD>
+
+<TD>MMYYDD</TD>
+</TR>
+
+<TR>
+<TD>3</TD>
+
+<TD>Day Mon nday year HH:MM:SS</TD>
+</TR>
+
+<TR>
+<TD>4</TD>
+
+<TD>CCYYMMDD (4 digits for theyear, etc.)</TD>
+</TR>
+
+<TR>
+<TD>5</TD>
+
+<TD>HH:MM:SS (the hour with minutes and seconds)</TD>
+</TR>
+</TABLE></CENTER>
+
+<H2>
+<A NAME="execshell"></A>Executing a shell or another application</H2>
+<B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>x(sVar); x<I>nameofapplic~;</I></FONT></FONT></TT></B>
+
+<P>The value contained either inside variable "sVar" or the constant that
+follows the letter 'x' will be passed on to the operating system for its
+execution. The next instruction won't be executed until the <I>new</I>
+application ends.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>tttlVar;&nbsp;</FONT></FONT></TT></B>
+Sometimes you need to know what number the running task is. This statement
+causes variable (long) 'lVar' to receive the value of the running task.
+This value is an arbitrary number issued by the operating system when the
+task starts running.
+<H2>
+<A NAME="sleep"></A>Sleep for n seconds</H2>
+<B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>ZiVar; Znn;</FONT></FONT></TT></B>
+
+<P>Sleep or do nothing for <I>iVar</I> seconds or (constant) <B>nn</B>
+seconds. (Don't abuse this instruction, please!)
+<H2>
+<A NAME="choicesandflow"></A><B><FONT SIZE=+2>Choices and flow control</FONT></B></H2>
+<B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>?b<U>iVar</U>,[aToaLabel,^LToCntLLabel,29Label29,
+`DefaultLabel;</FONT></FONT></TT></B>
+
+<P><B>"iVar"</B> should be a variable containing a <I>short value</I>.
+This value will be compaired to the expressions after the commas:
+
+<P><B>[a</B> if the value in "iVar" is equal to the value of the ASCII
+letter 'a', then control is transferred to "ToaLabel". You can put any
+letter or symbol or digit after the square opening bracket.
+
+<P><B>^L</B> The value of "iVar" is compared to the value of the ASCII
+letter 'L' MINUS 64. If it is equal to that value, then control is transferred
+to "CntLLabel".
+
+<P><B>29</B> Or any value. The value of "iVar" is compaired to the value
+indicated here and control is passed to the label (Label29).
+
+<P><B>`</B> The single back quote should be followed by the <I>default
+label</I>. That is where the control of the program will go if the value
+of "iVar" did not match any of the preprogrammed values.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>?g [aToaLabel,^LToCntLLabel,29Label29,
+`DefaultLabel;</FONT></FONT></TT></B>
+
+<P>This statement will follow the same rules as <B>?b...;</B> except that
+it does not take tha value from a variable but from the <B><I>user's input</I></B>.
+The program waits for the user to type a single character at the keyboard.
+Then it proceeds to compare the value of the typed character with the options.
+Control is then sent to the indicated label.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>?G [aToaLabel,^LToCntLLabel,29Label29,
+`DefaultLabel;</FONT></FONT></TT></B>
+
+<P>Identical to <B>?g...;</B> with one <B><I>big</I></B> difference: the
+control of the program is sent to a <B><I>subroutine</I></B>, and not to
+a diversion label. In other words, statement <B>?G...;</B> <B><I>expects</I></B>
+the control of the program to automatically <B><I>return</I></B> to the
+following instruction.
+
+<P>(A lot of VPG programs are simple loops around one of these <B><I>?G...;</I></B>
+instructions. Especially if the program will be used at an RS232 dumb terminals.)
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>yLabelYes,LabelNo;</FONT></FONT></TT></B>
+
+<P>This instruction waits for the user to type a POSITIVE or a NEGATIVE
+key. VPG recognizes as POSITIVE KEYS the following: <B>y,Y, s,S,O, o, 1,J,
+j.</B> The negative keys are <B>n,N,0. </B>Depending on the type of key
+touched, it will go to the <I>left label</I> if it was a positive key and
+to the <I>right</I> label if it was a negative key.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>gLabel;</FONT></FONT></TT></B>
+
+<P>The flow of the program will be drastically directed to <B>Label</B>.
+This is a common "go to". Use it only in <B><I>practical situations</I></B>,
+that is, in instances where it solves a deterministic condition. Please,
+do not plan your application on goto's! You are FREE to do it that way,
+but renounce that freedom! You don't really need it.
+
+<P>
+<HR WIDTH="100%">
+<H2>
+<A NAME="assignment"></A><B><FONT SIZE=+2>Assigning values to variables
+and making math computations</FONT></B></H2>
+<B>( ?Var ) = ( 1 ); ( ?Var ) = ( ?Var2 );</B>
+
+<P>Those are simple value assignment to numeric variables. The variable
+on the left should be capable of containing the value on the right. Automatic
+truncations will occur if this is not prevented.
+<BR>&nbsp;
+<H3>
+Reverse notation instead of parenthesis</H3>
+VPG uses <B><I>reverse polish notation</I></B> instead of parenthesis.
+This takes care of the <B><I>order of precedence </I></B>in executing mathematical
+computations. You don't have to worry about order of precedence at all.
+
+<P>Some mathematical operations involve <B><I>pairs</I></B> of quantities.
+Some involve only <B><I>one</I></B> amount.
+
+<P><B>Operations on pairs</B>
+<PRE><FONT COLOR="#3333FF">(dVar) = ... ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (dVar1)(dVar3)+ ... ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (dVar4)(dVar5)- ... ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (dVar4)(1.2745)* ... ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (dVarX)(.91)/ ... ;</FONT></PRE>
+Are you getting the idea? An arithmetical operator (+ - * /) is applied
+to two values. The result is ONE <I>new</I> value. This new value becomes
+<I>one</I> of another pair of values on which yet another arithmetical
+operator will be applied. The following are the operators that act on two
+values:
+<BR>&nbsp;
+<CENTER><TABLE>
+<TR>
+<TD ALIGN=CENTER WIDTH="10%"><B>+</B></TD>
+
+<TD>Adds the values</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER><B>-</B></TD>
+
+<TD>Subtracts from the amount on the left the value of the amount on the
+right.</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>*</TD>
+
+<TD>Multiplies the values</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>/</TD>
+
+<TD>Divides the values</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>^</TD>
+
+<TD>Elevates the first value to the power indicated by the 2nd value.</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>%</TD>
+
+<TD>Extracts the modulus indicated in the 2nd value to the first value</TD>
+</TR>
+</TABLE></CENTER>
+<B>Operations on ONE value</B>
+
+<P><B>VPG</B> recognizes the following operands that act on ONE value (that
+should be represented in a <I>variable</I>). This value will CHANGE when
+the operand acts on it. It will change according to the operand applied.
+<BR>&nbsp;
+<CENTER><TABLE>
+<TR>
+<TD ALIGN=CENTER WIDTH="10%">e</TD>
+
+<TD>Logarithm of value</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>L</TD>
+
+<TD>Log of base 10 of value</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>x</TD>
+
+<TD>exp(value)</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>s</TD>
+
+<TD>sine of value</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>c</TD>
+
+<TD>cosine of value</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>S</TD>
+
+<TD>Archsine of value</TD>
+</TR>
+
+<TR>
+<TD ALIGN=CENTER>r</TD>
+
+<TD>Stores a random value between 0 and 1</TD>
+</TR>
+</TABLE></CENTER>
+If you are still confused, maybe these examples will help:
+<PRE><FONT COLOR="#3333FF">(dVar) = (dVar1)(dvar2)+ (dvar3)r *;
+</FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ----value 1---- --val 2-</PRE>
+&nbsp;<B>VPG</B> will work on that statement as follows:
+<OL>
+<LI>
+dVar1 and dvar2 will be added and a new value will be obtained.</LI>
+
+<LI>
+dvar3 will receive a value (random) between 0 an 1</LI>
+
+<LI>
+The first value (the one obtained by adding dVar1 and dvar2) will be multiplied
+by the random value stored in dvar3.</LI>
+</OL>
+A very popular computation in the business world is this one, which calculates
+the amount to be paid per period in N periods over C capital charging i
+interest (per period):
+
+<P><B><FONT SIZE=+1>Periodical payment = 1 - ( ( (1+i) ^-N ))&nbsp; * C</FONT></B>
+
+<P>In <B>VPG</B> that becomes:
+<PRE><FONT COLOR="#3333FF">(dPayment) = (1) (1)(dinterest)- (-nPeriods)^ - (dCapital)* ;</FONT></PRE>
+This can be coded in your program source using more than one line:
+<PRE><FONT COLOR="#3366FF">(dPayment) = (1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (1)(dinterest)+ (-nPeriods)^
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (dCapital) *;</FONT></PRE>
+And this can be explained as follows:
+<OL>
+<LI>
+A value of one is presented. <B>VPG </B>will simply store it, since the
+two values that follow have an operand for them.</LI>
+
+<LI>
+The next two values will be operated with the '+' sign.</LI>
+
+<LI>
+The result of 1+interest will be elevated to power -24.</LI>
+
+<LI>
+The result will be subtracted from 1.</LI>
+
+<LI>
+The result above will be multiplied by the total capital, giving the periodical
+payment amount.</LI>
+</OL>
+So far, no one has reported not having been able to do something following
+this notational method.
+<BR>
+<HR WIDTH="100%">
+<H3>
+<A NAME="rounding"></A>Rounding double or float values</H3>
+If you have worked with doubles and floats in 'C' you already know what
+we are talking about when we refer to "rounding errors".
+
+<P><B>VPG</B> provides a simple mechanism to get rid of <I>most of the
+rounding errors. </I>Use this instuction whenever you need a value you
+are going to store to be as accurate as possible to a predetermined number
+of decimal positions. This is the instruction:
+<PRE><FONT COLOR="#3333FF">@dVariable,100.0; @dVar,1000.0;</FONT></PRE>
+Variable "dVariable" will be rounded to two decimal positions. Variable
+"dVar" will be rounded to three decimal positions. In other words, the
+number of zeroes after the '1' should equal the number of decimals you
+need your value to be rounded to.
+<H3>
+
+<HR WIDTH="100%"></H3>
+
+<H3>
+<A NAME="stringassing"></A>String assignment</H3>
+If the value on the left of an assignment operation is a string variable,
+then the value on the right can either be a string variable or a <I>constant</I>
+that should be represented as follows:
+<PRE><FONT COLOR="#3333FF">(sVar) = ($String,6); * 6 = total number of bytes after $ *</FONT></PRE>
+The above statement will copy the string "String" in the buffer of variable
+"sVar". In the next statement, both sides are variables:
+<PRE><FONT COLOR="#3333FF">(sVar) = (sVar2,#);</FONT></PRE>
+The contents of variable "sVar2" will be copied to the buffer of variable
+"sVar". A total of "#" characters will be copied. (If "sVar" is not big
+enough to hold all the characters coming from "sVar2", the program will
+certainly be corrupted).
+
+<P>The "#" (pound) symbol will be substituted by the compiler for the size
+of the variable immediately preceding it. In our case, <B>VPG</B> will
+receive the information: "Copy to sVar 35 bytes from sVar2" (assuming that
+"sVar" was created with a size of 35 bytes).
+<BR>
+<HR WIDTH="100%">
+<H2>
+<A NAME="comparing"></A>Comparing objects and making decisions</H2>
+The instructions to <B><I>compare</I></B> begin with symbol '!' followed
+by the objects to be compared enclosed in parenthesis and separated by
+a digit from 0 to 6. Each digit represents what condition the objects compared
+should satisfy for the comparison to be considered TRUE.
+<PRE><FONT COLOR="#3333FF">!(dVar1) 0 (dVar2) >|; ..; ...; .
+!(dVar1) 3 (dVar2) >Label;</FONT></PRE>
+All comparison instructions end with symbol ' > ' followed by either a
+LABEL or a <B><I>Flow Control Expression (FCE): | + -</I></B>.
+
+<P>The following table contains the digits and their comparison effects:
+<BR>&nbsp;
+<CENTER><TABLE COLS=3 WIDTH="100%" >
+<TR>
+<TD WIDTH="5%">0</TD>
+
+<TD WIDTH="5%">=</TD>
+
+<TD>TRUE if both objects are equal.</TD>
+</TR>
+
+<TR>
+<TD>1</TD>
+
+<TD>></TD>
+
+<TD>TRUE if left object is GREATER THAN right object.</TD>
+</TR>
+
+<TR>
+<TD>2</TD>
+
+<TD>&lt;</TD>
+
+<TD>TRUE if left object is LESS THAN right object</TD>
+</TR>
+
+<TR>
+<TD>3</TD>
+
+<TD>>=</TD>
+
+<TD>TRUE if left object is GREATER THAN OR EQUAL to right object</TD>
+</TR>
+
+<TR>
+<TD>4</TD>
+
+<TD>&lt;=</TD>
+
+<TD>TRUE if left object is LESS THAN OR EQUAL to right object.</TD>
+</TR>
+
+<TR>
+<TD>5</TD>
+
+<TD>&lt;></TD>
+
+<TD>TRUE if objects are NOT EQUAL.</TD>
+</TR>
+
+<TR>
+<TD>6</TD>
+
+<TD></TD>
+
+<TD>Used for strings: TRUE if string on the LEFT is <I>contained</I> within
+string on the right. Both sides MUST be varaibles.</TD>
+</TR>
+</TABLE></CENTER>
+
+<H3>
+<A NAME="andor"></A>AND and OR in comparisons</H3>
+If you need your program to make a decision upon the values of more than
+two variables, then you need to make two comparisons or more and OR them
+or AND them. In VPG you do this applying the same reverse polish notation
+method instead of using parenthesis. Observe the following example:
+<PRE><FONT COLOR="#3333FF">!(iVar1) 0 (iVar2)
+&nbsp;(iVar2) 1 (iVar4) &amp; >FCE;
+!(iVar1) 0 (iVar2)
+&nbsp;(iVar2) 1 (iVar4) | >FCE;</FONT></PRE>
+This translates into: <I>if iVar1 is equal to iVar2 AND iVar2 is GREATER
+than iVar4 then proceed to FCE (Flow Control Expression: a label or | +
+-).</I>
+
+<P>Then, the second comparison would read like this: <I>if iVar1 is equal
+to iVar2 OR iVar2 is GREATER than iVar4 then proceed to FCE.</I>
+
+<P>As usual in the reverse notation, you must have two <I>values</I> to
+work with. Every comparison yields TRUE or FALSE. AND (&amp;) requires
+ALL results to be true. OR ( | ) requires only ONE (any one) to be TRUE.
+
+<P>You can combine all numeric data types when making the comparisons:
+internally they will be compared as if they were all doubles.&nbsp;
+<HR WIDTH="100%">
+<H2>
+<A NAME="misceoutput"></A>Miscellanous output instructions</H2>
+<TT><FONT SIZE=+2><B><FONT COLOR="#3333FF">sNN;</FONT></B> </FONT></TT>'NN'
+should be a value (constant or variable of type short). 'NN' spaces will
+be inserted on the active output channel (screen or text file).
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>l;</FONT></FONT></TT></B>
+This is the instruction to use when you want your output to continue on
+a new line. If you are using the automatic header and footer pagination
+built into VPG, this instruction increases the line counter and generates
+the footers and headers accordingly.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>c*NN;</FONT></FONT></TT>
+</B>The actual character placed after the 'c' will be inserted in the active
+output channel 'NN' times. 'NN' can be a constant or a short variable value.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>`NN;</FONT></FONT></TT></B>
+Character of value 'NN' will be inserted in the active output channel.
+If the value is 12 (new page) and the autopagination feature has been setup
+in the active channel, it will proceed to execute the footer and header
+routines. If the new line character is used here, it won't be considered
+for the autopagination. (This statement is useful when sending control
+characters to a printer or special terminal.)
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>\xxxxxxx\;</FONT></FONT></TT></B>
+Anything inside the backslashes will be inserted (appended) to the active
+output channel. You can't include semicolons and backslashes. If you need
+them badly, you can mix this statement with the previous one (<B>`NN;)</B>.
+<BR>
+<HR WIDTH="100%">
+<H2>
+<A NAME="memory"></A>Memory related statements</H2>
+<B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>mNNNN;</FONT></FONT></TT></B>
+The active 'f' channel (memory buffers) will demand from the operating
+system a buffer of size 'NNNN'. 'NNNN' must be a constant value.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>zcc,Var,l;</FONT></FONT></TT></B>
+'cc' should be a value (constant or short) representing a <I>character</I>
+(from 0 to 255). 'Var' should be a variable of any VPG type. The letter
+el ( l ) is an indication that we want the buffer that contains variable
+'Var' to be <I>filled</I> with characters 'cc' starting at the position
+in the buffer where variable 'Var' is located and continuing all the way
+to the end of the buffer.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>zcc,Var,#;</FONT></FONT></TT></B>
+Fill the space of variable 'Var' with character 'cc'.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>zcc,Var,NN;</FONT></FONT></TT></B>
+Starting at the space of variable 'Var' fill the buffer of such variable
+with characters 'cc' up to position 'NN'.
+<BR>
+<HR WIDTH="100%">
+<H2>
+<A NAME="keybinput"></A>Input from the user's keyboard</H2>
+(These instructions don't make much sense under the Win32 environement.
+They are for the <I>console mode</I> under Linux or Unix(es). Statement
+<B><FONT SIZE=+2>tr;</FONT></B> should have been set prior to using them.)
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>ts0;</FONT></FONT></TT></B>
+Any input instruction executed <I>after</I> this statement will cause input
+string buffers to be filled with NULLS in all those positions starting
+at the right of the string buffer that are blank characters.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>ts1;</FONT></FONT></TT></B>
+Input instructions will <I>fill with blanks</I> all the positions of string
+buffers to the <I>right</I> of the point at the buffer where the user typed
+the ENTER key.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>tu0;</FONT></FONT></TT></B>
+Input instructions will store lower and uppercase characters, depending
+on what the user types.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>ts2;</FONT></FONT></TT></B>
+The characters typed won't be visible by the user. Useful when accepting
+an input that will be used as a password. You have to activate this mode
+right before you place the input instruction where you need this behavior
+and every time you need it. The mode deactivates itsefl after one time
+it is used.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>ts3; ts4;</FONT></FONT></TT></B>
+If you want the input instruction to end when the field is full, (without
+the user typing ENTER), use "<B>ts4;</B>" before your input instruction.
+Autoinput will remain active for all input instructions executed until
+a "<B>ts3;</B>" is encountered.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>tu1;</FONT></FONT></TT></B>
+Input instructions will convert lowercase characters to uppercase characters,
+as the user types them.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>isVar,#;</FONT></FONT></TT></B>
+This instruction will display <FONT COLOR="#CC0000">IN INVERSE MODE</FONT>
+the contents of buffer 'sVar'. Then the program will accept input from
+the user up to <B>#</B> characters <I>or</I> when the user types the ENTER
+key. The buffer will be filled according to the condition set by statements
+<B>ts0;/ts1;</B>. Using symbol # will automatically accept as many characters
+as the total size of the string variable being used in <B>ts1;</B> mode.
+In <B>ts0;</B> mode, # will accept <I>one character less</I> (for the null
+byte) of the total value indicated.
+
+<P>The following table explains the behavior of the program during an <B>i...;</B>
+(input) instruction:
+<BR>&nbsp;
+<CENTER><TABLE BORDER COLS=2 WIDTH="100%" >
+<TR>
+<TD WIDTH="15%">Any printable charater</TD>
+
+<TD>The typed character will be added to the buffer</TD>
+</TR>
+
+<TR>
+<TD>Right arrow</TD>
+
+<TD>The cursor will move to the right. Positions under the cursor will
+become blanks if they were NULLS.</TD>
+</TR>
+
+<TR>
+<TD>Left arrow</TD>
+
+<TD>The cursor will be moved to the left.</TD>
+</TR>
+
+<TR>
+<TD>Escape</TD>
+
+<TD>The buffer will be left as it was and the program will continue to
+the instruction indicated by <B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>t0LABEL;
+t0|;</FONT></FONT></TT></B></TD>
+</TR>
+
+<TR>
+<TD>Up arrow</TD>
+
+<TD>The same as ESCAPE</TD>
+</TR>
+
+<TR>
+<TD>ENTER</TD>
+
+<TD>The status of the buffer will be taken as the new contents of the string,
+following the rules indicated above.</TD>
+</TR>
+
+<TR>
+<TD>Down arrow</TD>
+
+<TD>The same as the ENTER key.</TD>
+</TR>
+
+<TR>
+<TD>END</TD>
+
+<TD>Sends cursor to the end of the buffer.</TD>
+</TR>
+
+<TR>
+<TD>HOME</TD>
+
+<TD>Sends cursor to the beginning of the buffer.</TD>
+</TR>
+
+<TR>
+<TD>Insert</TD>
+
+<TD>Inserts a blank character a the cursor position. The characters on
+the right are pushed. The last character is lost if the buffer was full.</TD>
+</TR>
+
+<TR>
+<TD>Delete</TD>
+
+<TD>The character under the cursor is deleted and those to its right are
+pulled leftwards. A blank is inserted at the last position in the buffer
+(ts1; mode).</TD>
+</TR>
+
+<TR>
+<TD>Control-X</TD>
+
+<TD>The contents of the buffer are cleared and the cursor is moved to the
+first position.</TD>
+</TR>
+</TABLE></CENTER>
+<B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>inVar,%-N[.N]~,%[,]N[.N]~;</FONT></FONT></TT></B>
+And this is the input instruction that accepts <B><I>numeric</I></B> values
+and stores them directly into the <B><I>numeric variable (nVar). </I></B>Numeric
+values require two masks: one for the presentation of the value to the
+user and another for the presentation of the value <I>after</I> it has
+been entered. The first mask is usally a mask that presents the quantity
+<I>left justified</I>. Once the amount has been entered then the second
+mask is used. This one usually presents the amount right justified and
+optionally with comma delimiters and decimal positions.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>t0LABEL; t0|;</FONT></FONT></TT>
+</B>This statement simply <I>prepares</I> the program so that next time
+the user types an escape during an <I>input</I> instruction the program
+will continue its flow at the indicated spot.
+
+<P>While in the numeric input instruction the user can expect the same
+behavior as during a string input, except that only numeric or numeric
+related characters will be accepted.
+<BR>
+<HR WIDTH="100%">
+<H2>
+<A NAME="reports"></A>Paginated Reports with VPG</H2>
+VPG provides a set of instrutions that allow you to format the distribution
+of your text on pages quite easily.
+
+<P><B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>FPlpp,fl,hLab,fLab;</FONT></FONT></TT>
+</B>This instruction <I>triggers</I> a report type of output to the active
+'F' channel. At the same time, you pass to the program the parameters of
+the report: lpp = lines per page. fl = footer length, that is, the number
+of lines that will be used by the footer. You don't need to give this value
+for the header. Your program determines the header as it produces it. You
+must place the header and footer labels instead of 'hLab' and 'fLab'.
+
+<P>Immediately after this instruction is executed, VPG proceeds to execute
+the <I>header section</I> of the program, which is as follows:
+<PRE><FONT COLOR="#3333FF"><FONT SIZE=+1>[HeaderLabel;
+&nbsp;....; ....;
+&nbsp;....; ....;
+Ft;</FONT></FONT></PRE>
+The footer section follows the same rule, except that it ends with instruction
+<B>"Fe;"</B> (instead of 'Ft').
+<PRE><FONT COLOR="#3333FF"><FONT SIZE=+1>[FooterLabel;
+&nbsp;....; ....;
+&nbsp;....; ....;
+Fe;</FONT></FONT></PRE>
+<B><TT><FONT COLOR="#3333FF"><FONT SIZE=+2>Fp%d~;</FONT></FONT></TT> </B>When
+you need the <I>page number</I> (of the report in progress) to appear,
+all you have to do is include this statement. The last part of the statment
+is the FORMAT in which the page number will appear. You can freely include,
+after the 'Fp' expression, anything that you want placed before or after
+the actual page number. If you place <B>"FpPage No. %d~;"</B> the program
+will produce: <B>"Page No. 22"</B> (if your report is at such page number).
+</BODY>
+</HTML>

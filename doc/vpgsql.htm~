@@ -1,0 +1,342 @@
+<html><title> Instrucciones para el Manejo de Bases de Datos</title>
+<BODY TEXT="#663300" BGCOLOR="#FFFFCC" LINK="#0000FF" VLINK="#FF0000" ALINK="#000088" font>
+
+<h1> Instrucciones para el Manejo de Bases de Datos</h1>
+Abril 7 de 2007 DRBR<br>
+
+Las instrucciones para el manejo de las Bases de datos:
+<table>
+<tr><td>
+fdn; <br><br>Selecciona la Base de datos n ( n es un entero del 1 al 9 )
+</td></tr>
+
+<tr><td>
+<hr>
+O@,database,user,password,modo,RUTINA;
+<br>
+Abrir base de datos<br><br>
+Donde:<br>
+<table border=1>
+<tr><td>database	</td><td>variable string con el nombre del conector a la BD</td></tr>
+<tr><td>user		</td><td>variable string con el login de la BD</td></tr>
+<tr><td>password	</td><td>Variable String con el password a la BD</td></tr>
+<tr><td>modo		</td><td>Constante que puede ser 1=Autocomit 0=noAutocomit ( no lleva comillas)</td></tr>
+<tr><td>RUTINA		</td><td>Nombre de etiqueta a donde manda el flujo del programa en caso de no lograr la conexion</td></tr>
+</table>
+<br>Ejemplo:<br>
+O@,mibd_z,"sa","lux",1,ERRCNB,;  * con conexion autocommit    *
+</td></tr>
+
+<tr><td>
+<hr>
+
+fn; <br><br>
+Buffer activo n donde n es un numero del 0 al 99 no lleva comillas<br>
+
+Ejemplo:<br>
+f1; * -- Buffer Activo 1 *
+</td></tr>
+
+<tr><td>
+<hr>
+
+ot,tabla_z,; <br><br>
+Abrir tabla <br><br>
+
+Donde:
+<table border=1>
+<tr><td>tabla_z	       </td><td>Variable que contiene el nombre de la tabla 
+que desea abrir, <br>
+<ul>
+<li>con o minuscula es solo de lectura
+<li>con O mayuscula es de lectura y esacritura
+</td></tr>
+</table>
+<br>
+Ejemplo:	ot,"vendedor",; *--> Abrir la tabla vendedor <-- *
+</td></tr>
+<tr><td>
+<hr>
+
+kp,codicion,var1,tam1,tipo1,var2,tam2,...,; <br>
+preparar la sentencia sql "select * from ", <br><br>
+
+<table border=1>
+<tr><td>"codigo=?"	 </td><td>es la condicionante</td></tr>
+<tr><td>vend_z,#,1,	 </td><td>Es la variable del la cual se tomara el dato que reemplaza al ?</td></tr>
+<tr><td>#		 </td><td>Es la longitud de la variable pues es string</td></tr>
+<tr><td>1		 </td><td>Es el tipo de dato:<br>
+<ul>
+<li>		 1 - String
+<li>                 3 - Fecha en structura ( int aa, int mm, int dd)
+<li>                 4 - TimesStamp structura ( int aa, int mm, int dd, int hora, int min, int seg)
+<li>                 el tipo de dato puede ser opcional si estamos hablando de un float, double, long, int
+</ul>
+</td></tr>
+</table>
+                 
+cuando se usa kp significa que se acompletara un query
+con "select * from " + nombre_tabla relacionado al buffer activo + " where "
++ la condicion que se ponga, siempre tiene que ser constante y usar comillas
+
+<br>Ejemplo:<br>
+
+<pre>
+f1; #ivendedor.i;
+k0; ot,"vendedor",;
+k1; kp,"codigo = ?",vend_z,#,1,;
+</pre>
+
+k1 sera el query "select * from vendedor where codigo=?" 
+
+<br> otro ejemplo:<br>
+<pre>
+f2; #imvcli2.i;
+k0; ot,mvcli_z,;
+k3; kp,"idcli=? and fechamov=? order by conse desc",idcli_z,fechamov_z,#,3,;
+</pre>
+
+suponiendo que mvcli_z contenga "mvcli2"
+k3 tendra el query: <br>
+"select * from mvcli2 where idcli = ? and fechamov = ?"<br>
+idcli_z es una variable tipo l ( entero largo ) y fechamov es una estructura tipo ( int anu, int mes, int dia)
+
+siempre termina con ,; ( coma y punto y coma )
+
+La sentencia se prepara pero no se ejecuta ( SqlPrepare )
+</td></tr>
+
+<tr><td>
+<hr>
+
+kq,sentencia,lista_variables,; <br><br>
+
+kq es para escribir sentencias que tengan cualquier forma que uno desee,
+sentencia es una constante con la sentencia que desee agregar
+lista_variables es una lista de las variables, longitudes y tipos de variables que usa
+la sentencia.
+
+<br>Ejemplo:<br>
+
+<pre>
+
+f3; M
+	nombre_use		s16,
+        maestro_use		s2,
+        numpol_use		s3,
+        iniciales_use		s5,
+        permi02_use		s2,
+        idusuario_use		l,;
+k0; ot,"usuarios",;
+k1; kq,"select a.nombre,a.maestro,a.numpol,a.iniciales,a.permi02,b.idusuario
+	from usuarios a join car_usuarios b on a.nombre = b.login
+	where a.nombre =? and a.clave=?",nombuse_z,#,1,clause_z,#,1,;
+
+</pre>
+
+kq contendra la sentencia definida entre comillas, nombuse_z es una variable 
+string y por tanto debe ir acompañada de la longitud y tipo 1, 
+clause_z es una variable igualmente string y por tanto debe ir 
+acompañada de la longitud y tipo 1
+siempre termina con ,; ( coma y punto y coma )
+
+La sentencia se prepara pero no se ejecuta ( SqlPrepare )
+</td></tr>
+
+<tr><td>
+<hr>
+
+qx,sentencia,; <br><br>
+
+qx es para escribir sentencias que tengan cualquier forma de actualizacion 
+que uno desee, es decir, solo deletes, insert o updates,
+pues al no conocerse la estructura de que se recibiria no hay un Bind 
+de las columnas por lo que no sirve para select, la sentencia se ejecuta de
+inmediato ( lo que seria un SQLDirectExecute )
+
+<br>Ejemplo:<br>
+<pre>
+
+(codigo_z)=(numcli_cli,#);
+z0,sqlcmd_z,#;
+q+,sqlcmd_z,"delete from ",tbdircl_z," where idcli=",idcli_z,;
+f1; k9; qx,sqlcmd_z,;
+
+</pre>
+
+sqlcmd_z contendra la sentencia resultado de la concatenacion (ver q+ ) y se
+ejecuta directamente
+
+siempre termina con ,; ( coma y punto y coma )
+</td></tr>
+
+<tr><td>
+<hr>
+
+qD,1,fecven_z,fecbas_z,; <br><br>
+
+qD sirve para pasar fechas de un formato a otro, donde:
+<table border=1>
+<tr><td>1	</td><td>Pasa fecha de estructura ( int anu, int mes, int dia) a tipo l ( fecha unix )</td></tr>
+<tr><td>2	</td><td>Pasa fecha tipo l ( fecha unix ) a estructura ( int anu, int mes, int dia)</td></tr>
+</table>
+
+es importante notar que en cualuiera de los casos, primero se nombra la 
+variable tipo estructura ( int anu, int mes, int dia) y segundo 
+
+</td></tr>
+
+<tr><td>
+<hr>
+q+,destino_z,var1_z,var2_z,"EN LA CIUDAD DE MERIDA, YUC",; <br><br>
+
+q+ se usa para concatenar variables en formato string
+
+<table border=1>
+<tr><td>destino_z 	</td><td>variable tipo string que contendra la cadena resultante</td></tr>
+<tr><td>var1_z		</td><td>variable de tipo string o entero</td></tr>
+<tr><td>var1_z		</td><td>variable tipo string o entero</td></tr>
+</table>
+
+siempre termina con ,; ( coma y punto y coma ) <br><br>
+
+cuando es una variable tipo long ( l ) se usara la mascara %ld 
+esta instruccion no funciona con otros tipos de variables, por lo que para 
+concatenar el contenido de otros tipos de variables primero hay que hacer las
+conversiones y luego la concatenacion
+
+</td></tr>
+<tr><td>
+<hr>
+
+P; <br><br>
+
+Ejecuta una sentencia previamente preparada con un kp o kq del ultimo buffer 
+activo con fn; notese que esta sentencia espera valores de regreso 
+( es un select ) si no esperara valores debe usar P$; 
+( sentencias insert, delete o update )
+<br>
+al ejecutar esta instuccion automaticamente se posiciona el cursor del 
+query en el primer registro ( pero no lee el contenido )
+
+
+<br>ejemplo:<br>
+
+<pre>
+
+GDEFINE_TABLAS;
+[cla; GST; \Teclee la Clave de Usuario : \; t0use; z0,clause_z,#;
+ts2; iclause_z,10;
+f3; k1; P; n|; GST; `7; \Usuario Inexistente ...\; guse; .
+!(permi02_use)0($N,1)>|;
+  GST; `7; \Lo Siento \; pnombre_use,#; \ No tiene Acceso a esta seccion \;
+  Z2; gFin;
+.
+gFin;
+
+
+[DEFINE_TABLAS;
+
+f3; M
+	nombre_use		s16,
+        maestro_use		s2,
+        numpol_use		s3,
+        iniciales_use		s5,
+        permi02_use		s2,
+        idusuario_use		l,;
+k0; ot,"usuarios",;
+k1; kq,"select a.nombre,a.maestro,a.numpol,a.iniciales,a.permi02,b.idusuario
+	from usuarios a join car_usuarios b on a.nombre = b.login
+	where a.nombre =? and a.clave=?",nombuse_z,#,1,clause_z,#,1,;
+
+R;
+</pre>
+</td></tr>
+
+<tr><td>
+<hr>
+nETIQUETA; <br><br>
+
+lee el resultado del ultimo P; ( hace un Fetch de un registro )
+( ver la instruccion P; ) y en caso de no poder leer transfiere la ejecuccion
+del programa a ETIQUETA
+
+</td></tr>
+
+<tr><td>
+<hr>
+
+b; <br><br>
+
+lee el registro anterior del ultimo P; ejecutado, con esta instruccion se 
+puede navegar a traves del recordset, pero no lee el contenido, solo mueve 
+el cursor del query.
+
+</td></tr>
+
+<tr><td>
+<hr>
+
+a; <br><br>
+
+lee el registro siguiente del ultimo P; ejecutado, con esta instruccion se 
+puede navegar a traves del recordset, pero no lee el contenido, solo mueve 
+el cursor del query.
+</td></tr>
+
+<tr><td>
+<hr>
+tacscomb; <br><br>
+* tac - colores, s=set o aplicar, comb=combinacion *
+<br>comb puede ser una constante o una viariable tipo i que contiene
+el numero de la combiacion de colores previamente preparada
+
+</td></tr>
+
+<tr><td>
+<hr>
+ttcmaxcol; <br><br>
+* Asgina a maxcol (variable tipo i ) el numero de columnas de la ventana activa *
+</td></tr>
+
+<tr><td>
+<hr>
+ttrmaxrow; <br><br>
+* Asigna a maxrow (variable tipo i ) el numero de renglones de la ventana activa *
+</td></tr>
+
+<tr><td>
+<hr>
+
+ttuname;   <br><br>
+* Asigna a name (variable tipo string de longitud suficiente ) el nombre del usuario (login) *
+</td></tr>
+
+<tr><td>
+<hr>
+
+ttl;       <br><br>
+* Crea una ventana con una calculadora interna *
+</td></tr>
+
+<tr><td>
+<hr>
+qu,svar,;  * Convierte a mayusculas el contenido de la variable tipo string svar  *
+
+</td></tr>
+
+<tr><td>
+<hr>
+
+qr,svar1,svar2,svar3,; <br><br>
+* reemplaza cada svar2 en svar1 por svar3
+<br> ejemplo:<br><br>
+<pre>
+(svar1)=($/midir/miarch,13);
+qr,svar1,"/","_",;    y quedaria svar1 = "_midir_miarch_";
+</pre>
+
+</td></tr>
+</table>
+</body>
+</html>

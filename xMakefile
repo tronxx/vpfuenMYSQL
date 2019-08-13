@@ -1,0 +1,162 @@
+SOLID=/solidSDK30/Linux_glibc2/lib/scll2x30.a 
+vpg4:	vpg4v.o inpq.o chefun3.o misce.o pan.o impfs.o \
+		vsamfun.o vplib.o recup.o vcgi2.o \
+			vstrings.o vbsearch.o \
+			calcd4.o cmp2.o comma.o vcliser.o \
+			getad.o tida.o vblo.o err.o vattr.o vform.o
+	cc -o vpg4 -lform -lncurses -lm \
+    	 vpg4v.o inpq.o chefun3.o misce.o pan.o impfs.o \
+			vsamfun.o vplib.o recup.o \
+			vstrings.o vbsearch.o vcliser.o \
+			calcd4.o cmp2.o comma.o vcgi2.o \
+			getad.o tida.o vblo.o err.o vattr.o vform.o
+	chown root vpg4
+	chmod u+s vpg4
+	mv vpg4 /usr/binnew
+
+vpg4s:		vpg4q.o solsq.o getadq.o calcu.o \
+		inpq.o chefun3.o misce.o pan.o impfs.o \
+		vstrings.o calcd4.o cmp3.o comma.o vcliser.o \
+		tida.o errq.o vattr.o vform.o vcgi2.o
+	cc  -ovpg4s -lform -lncurses -lm -lpthread -lp\
+		vpg4q.o getadq.o solsq.o calcu.o\
+		$SOLID\
+		inpq.o chefun3.o misce.o pan.o impfs.o \
+		vstrings.o calcd4.o cmp3.o comma.o vcgi2.o vcliser.o \
+		tida.o errq.o vattr.o vform.o
+	chown root vpg4s
+	chmod u+s vpg4s
+	mv vpg4s /usr/binnew
+
+vcliser.o:	vcliser.c
+		cc -c vcliser.c
+
+calcu.o:	calcu.c
+		cc -c calcu.c
+
+vpg4q.o:	vpg4s.c vsqrun.c archisq.h
+		cc -c -DSS_UNIX -DSQLGEN -ovpg4q.o vpg4s.c
+
+solsq.o:	solsq.c archisq.h
+		cc -c -DSS_UNIX solsq.c
+
+getadq.o:	getad.c archisq.h
+		cc -c -DSS_UNIX -DSQLGEN -ogetadq.o getad.c
+
+getad.o:	getad.c
+		cc -c -DVSAMD getad.c
+
+vpg4v.o:	vpg4s.c vsamrun.c
+		cc -c -DVSAMD -ovpg4v.o vpg4s.c
+		
+vpsort:		vpsort.c
+		cc -o/usr/binnew/vpsort vpsort.c
+
+vp:		vp.c
+		cc -o/usr/binnew/vp vp.c
+
+vps:		vp3.c
+		cc -o/usr/binnew/vps vp3.c
+
+vpg4.o:		vpg4.c
+		cc -c vpg4.c
+
+vattr.o:	vattr.c
+		cc -c vattr.c
+
+err.o:		err.c
+		cc -c err.c
+		
+errq.o:		err.c archisq.h
+		cc -c -DSQLGEN -oerrq.o err.c
+
+vblo.o:		vblo.c
+		cc -c vblo.c
+
+tida.o:		tida.c
+		cc -c tida.c
+
+comma.o:	comma.c
+		cc -c comma.c
+
+cmp2.o:		cmp2.c
+		cc -c cmp2.c
+
+cmp3.o:  	cmp3.c
+		cc -c cmp3.c
+
+calcd4.o:	calcd4.c
+		cc -c calcd4.c
+
+vbsearch.o:	vbsearch.c
+		cc -c vbsearch.c
+
+vstrings.o:	vstrings.c
+		cc -c vstrings.c
+
+recup.o:	recup.c
+		cc -c recup.c
+
+impf.o:		impf.c
+		cc -c impf.c
+
+impfs.o:	impfs.c
+		cc -c impfs.c
+
+pan.o:		pan.c
+		cc -c pan.c
+
+misce.o:	misce.c
+		cc -c misce.c
+
+chefun3.o:	chefun3.c
+		cc -c chefun3.c
+
+inpq.o:		inpq.c
+		cc -c inpq.c
+
+vplib.o:	vplib.c
+		cc -c vplib.c
+
+vsamfun.o:	vsamfun.c
+		cc -c vsamfun.c
+
+cblfi:	cblfi.c
+	cc -o/usr/binnew/cblfi cblfi.c
+
+vfck:	vfck.c
+	cc -o/usr/binnew/vfck vfck.c
+
+sqdef:	sqdef.c archisq.h
+	cc sqdef.c /solid/lib/scll2x23.a -lm -lpthread -obin/sqdef
+
+sqdef1: sqdef1.c archisq.h
+	cc sqdef1.c /solid/lib/scllux22.a -lm -o/usr/binnew/sqdef1
+
+genctr:	genctr.c archisq.h
+	cc genctr.c /solid/lib/scllux22.a -lm -o/usr/binnew/genctr
+
+sqcheck: sqcheck.c archisq.h
+	cc sqcheck.c /solid/lib/scllux22.a -lm -o/usr/binnew/sqcheck
+
+parcar:	parcar.c vsamstr.h
+	cc parcar.c -o/usr/binnew/parcar
+
+parcar1:	parcar1.c vsamstr.h
+	cc parcar1.c -o/usr/binnew/parcar1
+
+parcar1a:	parcar1a.c vsamstr.h
+	cc parcar1a.c -o/usr/binnew/parcar1a
+
+forpan:		forpan.c err2.c
+	cc -o/usr/binnew/forpan forpan.c
+
+forpanp:	forpanp.c err2.c
+	cc -o/usr/binnew/forpanp forpanp.c
+
+vform.o:	vform.c
+	cc -c vform.c
+
+qcm:	qcm.c
+	cc qcm.c -o /usr/binnew/qcm
+

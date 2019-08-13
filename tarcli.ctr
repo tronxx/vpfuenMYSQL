@@ -1,0 +1,10 @@
+LOAD DATA
+INFILE 'AUXTAR.dat'
+INTO TABLE AUXTAR
+FIELDS TERMINATED BY X'09'
+(
+ cvetar integer nullif null,
+ numadic smallint nullif null,
+ cvebasic integer nullif null,
+ 	
+)

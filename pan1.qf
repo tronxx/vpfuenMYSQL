@@ -1,0 +1,7 @@
+qf,
+1,12,"Esto: ",0,1,18,sNombre,#,
+2,9,"Lo Otro: ",0,2,18,dCanti1,"%12.2f",
+3,6,"SeFueAlDía: ",0,3,18,DFecha1,"+10",
+4,1,"Caracterización: ",0,4,18,iConta1,"%6d",
+5,5,"Lo otro así: ",0,5,18,sNomb1,#,,
+9,26,"",0,;
